@@ -1,7 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+using Web_QuanLySieuThiNho.Models;
+using Web_QuanLySieuThiNho.Repo;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+var connectionString = builder.Configuration.GetConnectionString("QlsieuThiNhoContext");
+builder.Services.AddDbContext<QlsieuThiNhoContext>(x=>x.UseSqlServer(connectionString));
+
+builder.Services.AddScoped<ILoaiHangRepo, LoaiHangRepo>();  
+
 
 var app = builder.Build();
 
@@ -22,6 +32,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=HomePage}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
