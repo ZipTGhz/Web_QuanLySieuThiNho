@@ -33,5 +33,5 @@
     </div>
 </section>
 <div class="product__pagination">
-    @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { pageNumber = page }))
 </div>

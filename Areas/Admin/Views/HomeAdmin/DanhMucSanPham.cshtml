@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "DanhMucSanPham";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@using Web_QuanLySieuThiNho.Models
+@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<TSanPham>
+
+<h1>Danh mục sản phẩm</h1>
+
+<p>
+    <a asp-action="Create">Thêm sản phẩm mới</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Tên sản phẩm
+            </th>
+            <th>
+                Đơn giá nhập
+            </th>
+            <th>
+                Đơn giá bán
+            </th>
+            <th>
+                Số lượng
+            </th>
+            <th>
+                Trọng lượng
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TenSanPham)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DonGiaNhap)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DonGiaBan)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SoLuong)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TrongLuong)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.MaSanPham">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.MaSanPham">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.MaSanPham">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="product__pagination">
+    @Html.PagedListPager(Model, page => Url.Action("DanhMucSanPham", new { pageNumber = page }))
+</div>
