@@ -44,6 +44,10 @@ namespace Web_QuanLySieuThiNho.Controllers
             var product = db.TSanPhams.SingleOrDefault(x => x.MaSanPham == productId);
             return View(product);
         }
+        public IActionResult Cart()
+        {
+            return RedirectToAction("Index", "Cart");
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

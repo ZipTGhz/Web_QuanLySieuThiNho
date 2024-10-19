@@ -19,6 +19,8 @@ public partial class QlsieuThiNhoContext : DbContext
 
     public virtual DbSet<TChiTietHdn> TChiTietHdns { get; set; }
 
+    public virtual DbSet<TGioHang> TGioHangs { get; set; }
+
     public virtual DbSet<THoaDonBan> THoaDonBans { get; set; }
 
     public virtual DbSet<THoaDonNhap> THoaDonNhaps { get; set; }
@@ -32,6 +34,8 @@ public partial class QlsieuThiNhoContext : DbContext
     public virtual DbSet<TNhanVien> TNhanViens { get; set; }
 
     public virtual DbSet<TSanPham> TSanPhams { get; set; }
+
+    public virtual DbSet<TSanPhamGioHang> TSanPhamGioHangs { get; set; }
 
     public virtual DbSet<TTaiKhoan> TTaiKhoans { get; set; }
 
@@ -86,6 +90,22 @@ public partial class QlsieuThiNhoContext : DbContext
                 .HasForeignKey(d => d.SoHdn)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_tChiTietHDN_tHoaDonNhap");
+        });
+
+        modelBuilder.Entity<TGioHang>(entity =>
+        {
+            entity.HasKey(e => e.MaGioHang).HasName("PK__tGioHang__F5001DA3E89520D5");
+
+            entity.ToTable("tGioHang");
+
+            entity.Property(e => e.NgayTao).HasColumnType("datetime");
+            entity.Property(e => e.TenDangNhap).HasMaxLength(50);
+            entity.Property(e => e.TongTienGioHang).HasColumnType("money");
+            entity.Property(e => e.TrangThai).HasMaxLength(50);
+
+            entity.HasOne(d => d.TenDangNhapNavigation).WithMany(p => p.TGioHangs)
+                .HasForeignKey(d => d.TenDangNhap)
+                .HasConstraintName("FK_tGioHang_tTaiKhoan");
         });
 
         modelBuilder.Entity<THoaDonBan>(entity =>
@@ -229,6 +249,25 @@ public partial class QlsieuThiNhoContext : DbContext
                 .HasForeignKey(d => d.MaLoaiHang)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_tSanPham_tLoaiHang");
+        });
+
+        modelBuilder.Entity<TSanPhamGioHang>(entity =>
+        {
+            entity.HasKey(e => e.MaSanPhamGioHang).HasName("PK__tSanPham__9146F8331FC9360D");
+
+            entity.ToTable("tSanPhamGioHang");
+
+            entity.Property(e => e.DonGiaBan).HasColumnType("money");
+            entity.Property(e => e.MaSanPham).HasMaxLength(10);
+            entity.Property(e => e.TongTienSanPham).HasColumnType("money");
+
+            entity.HasOne(d => d.MaGioHangNavigation).WithMany(p => p.TSanPhamGioHangs)
+                .HasForeignKey(d => d.MaGioHang)
+                .HasConstraintName("FK_tSanPhamGioHang_tGioHang");
+
+            entity.HasOne(d => d.MaSanPhamNavigation).WithMany(p => p.TSanPhamGioHangs)
+                .HasForeignKey(d => d.MaSanPham)
+                .HasConstraintName("FK_tSanPhamGioHang_tSanPham");
         });
 
         modelBuilder.Entity<TTaiKhoan>(entity =>

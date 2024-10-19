@@ -1,3 +1,4 @@
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Web_QuanLySieuThiNho.Models;
 using Web_QuanLySieuThiNho.Repo;
@@ -8,10 +9,25 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 var connectionString = builder.Configuration.GetConnectionString("QlsieuThiNhoContext");
-builder.Services.AddDbContext<QlsieuThiNhoContext>(x=>x.UseSqlServer(connectionString));
+builder.Services.AddDbContext<QlsieuThiNhoContext>(x => x.UseSqlServer(connectionString));
 
-builder.Services.AddScoped<ILoaiHangRepo, LoaiHangRepo>();  
+builder.Services.AddScoped<ILoaiHangRepo, LoaiHangRepo>();
 
+// Cấu hình session
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(option =>
+{
+    option.IdleTimeout = TimeSpan.FromMinutes(30);
+    option.Cookie.HttpOnly = true;
+    option.Cookie.IsEssential = true;
+});
+
+// Cấu hình Authentication với Cookie
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login/Index";
+    });
 
 var app = builder.Build();
 
@@ -28,7 +44,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

@@ -65,7 +65,7 @@ For more information on enabling MVC for empty projects, visit https://go.micros
             <div class="row">
                 <div class="col-lg-3">
                     <div class="header__logo">
-                        <a href="./index.html"><img src="../img/logo.png" alt=""></a>
+                        <a asp-controller="Home" asp-action="Index"><img src="../img/logo.png" alt=""></a>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -78,10 +78,15 @@ For more information on enabling MVC for empty projects, visit https://go.micros
                 <div class="col-lg-3">
                     <div class="header__cart">
                         <ul>
-                            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                            <li>
+                                <a asp-controller="Home" asp-action="Cart">
+                                    <i class="fa fa-shopping-bag"></i>
+                                    <span>@(Context.Session.GetInt32("CartCount") ?? 0)</span>
+                                </a>
+                            </li>
+
                         </ul>
-                        <div class="header__cart__price">Sản phẩm: <span>150.000 VND</span></div>
+                        <div class="header__cart__price">Tổng giá trị: <span>150.000 VND</span></div>
                     </div>
                 </div>
             </div>
