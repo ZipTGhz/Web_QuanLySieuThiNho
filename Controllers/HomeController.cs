@@ -18,6 +18,7 @@ namespace Web_QuanLySieuThiNho.Controllers
 
         public IActionResult Index(int pageNumber = 1)
         {
+            HttpContext.Session.SetString("username", "user");
             int pageSize = 12;
             var products = db.TSanPhams.AsNoTracking().OrderBy(x => x.TenSanPham);
 

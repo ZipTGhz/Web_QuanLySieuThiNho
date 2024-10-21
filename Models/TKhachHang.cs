@@ -17,6 +17,8 @@ public partial class TKhachHang
 
     public string? DiaChi { get; set; }
 
+    public virtual ICollection<TGioHang> TGioHangs { get; set; } = new List<TGioHang>();
+
     public virtual ICollection<THoaDonBan> THoaDonBans { get; set; } = new List<THoaDonBan>();
 
     public virtual TTaiKhoan? TenDangNhapNavigation { get; set; }

@@ -98,14 +98,16 @@ public partial class QlsieuThiNhoContext : DbContext
 
             entity.ToTable("tGioHang");
 
+            entity.Property(e => e.MaKh)
+                .HasMaxLength(10)
+                .HasColumnName("MaKH");
             entity.Property(e => e.NgayTao).HasColumnType("datetime");
-            entity.Property(e => e.TenDangNhap).HasMaxLength(50);
             entity.Property(e => e.TongTienGioHang).HasColumnType("money");
             entity.Property(e => e.TrangThai).HasMaxLength(50);
 
-            entity.HasOne(d => d.TenDangNhapNavigation).WithMany(p => p.TGioHangs)
-                .HasForeignKey(d => d.TenDangNhap)
-                .HasConstraintName("FK_tGioHang_tTaiKhoan");
+            entity.HasOne(d => d.MaKhNavigation).WithMany(p => p.TGioHangs)
+                .HasForeignKey(d => d.MaKh)
+                .HasConstraintName("FK_tGioHang_tKhachHang");
         });
 
         modelBuilder.Entity<THoaDonBan>(entity =>
@@ -117,6 +119,7 @@ public partial class QlsieuThiNhoContext : DbContext
             entity.Property(e => e.SoHdb)
                 .HasMaxLength(10)
                 .HasColumnName("SoHDB");
+            entity.Property(e => e.GhiChu).HasMaxLength(1000);
             entity.Property(e => e.MaKh)
                 .HasMaxLength(10)
                 .HasColumnName("MaKH");
@@ -241,7 +244,7 @@ public partial class QlsieuThiNhoContext : DbContext
             entity.Property(e => e.DonGiaBan).HasColumnType("money");
             entity.Property(e => e.DonGiaNhap).HasColumnType("money");
             entity.Property(e => e.MaLoaiHang).HasMaxLength(10);
-            entity.Property(e => e.MoTa).HasMaxLength(2000);
+            entity.Property(e => e.MoTa).HasMaxLength(3000);
             entity.Property(e => e.TenSanPham).HasMaxLength(200);
             entity.Property(e => e.TrongLuong).HasMaxLength(50);
 

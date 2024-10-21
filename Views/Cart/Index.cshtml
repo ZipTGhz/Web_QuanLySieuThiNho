@@ -43,9 +43,9 @@
                             {
                                 @foreach (var item in Model.TSanPhamGioHangs)
                                 {
-                                    <tr>
+                                    <tr id="cart-item-@item.MaSanPham">
                                         <td class="shoping__cart__item">
-                                            <img width="100" height="100" src=@Url.Content("../ProductImages/" + @item.MaSanPhamNavigation.AnhSanPham) alt="">
+                                            <img style="height: 100px; width: auto;" src=@Url.Content("../ProductImages/" + @item.MaSanPhamNavigation.AnhSanPham) alt="">
                                             <h5>@item.MaSanPhamNavigation.TenSanPham</h5>
                                         </td>
                                         <td class="shoping__cart__price">
@@ -62,7 +62,7 @@
                                             @item.TongTienSanPham.Value.ToString("#,##0") VND
                                         </td>
                                         <td class="shoping__cart__item__close">
-                                            <span class="icon_close"></span>
+                                            <span class="icon_close" onclick="removeCartItem('@item.MaSanPham')"></span>
                                         </td>
                                     </tr>
                                 }
@@ -76,10 +76,6 @@
             <div class="col-lg-12">
                 <div class="shoping__cart__btns">
                     <a asp-controller="Home" asp-action="Index" class="primary-btn cart-btn">TIẾP TỤC MUA SẮM</a>
-                    <a href="#" class="primary-btn cart-btn cart-btn-right">
-                        <span class="icon_loading"></span>
-                        Cập nhật giỏ hàng
-                    </a>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -88,9 +84,9 @@
                 <div class="shoping__checkout">
                     <h5>Tổng giá trị giỏ hàng</h5>
                     <ul>
-                        <li>Tổng <span id="totalAmountCart">@Model.TongTienGioHang.Value.ToString("#,##0") VND</span></li>
+                        <li>Tổng <span class="totalAmountCart">@Model.TongTienGioHang.Value.ToString("#,##0") VND</span></li>
                     </ul>
-                    <a asp-controller="Cart" asp-action="Checkout" class="primary-btn">TIẾN HÀNH THANH TOÁN</a>
+                    <a href="javascript:void(0);" class="primary-btn" onclick="checkCartBeforeCheckout()">TIẾN HÀNH THANH TOÁN</a>
                 </div>
             </div>
         </div>
@@ -101,17 +97,16 @@
 <script>
     function updateCartItem(productId, quantity) {
         $.ajax({
-            url: '@Url.Action("UpdateCart", "Cart")', // Đường dẫn đến action UpdateCart
+            url: '@Url.Action("UpdateCartItemQuantity", "Cart")',
             type: 'POST',
             data: {
                 productId: productId,
                 quantity: quantity
             },
             success: function (response) {
-                // Cập nhật lại giá trị tổng giỏ hàng hoặc làm mới một phần của trang nếu cần
-                // Bạn có thể cập nhật lại tổng giá trị giỏ hàng tại đây
+                $('#cartCount').text(response.cartCount);
                 $('#totalAmount_' + productId).text(response.totalAmountCartItem + " VND");
-                $('#totalAmountCart').text(response.totalAmountCart + " VND");
+                $('.totalAmountCart').text(response.totalAmountCart + " VND");
             },
             error: function (xhr, status, error) {
                 console.error("Error updating cart: ", error);
@@ -119,5 +114,38 @@
         });
     }
 
+    function removeCartItem(productId) {
+        $.ajax({
+            url: '@Url.Action("RemoveCartItem", "Cart")',
+            type: 'POST',
+            data: { productId: productId },
+            success: function (response) {
+                $('#cart-item-' + productId).remove();
+
+                $('#cartCount').text(response.cartCount);
+                $('.totalAmountCart').text(response.totalAmountCart + " VND");
+            },
+            error: function () {
+                alert('Có lỗi xảy ra khi xoá sản phẩm khỏi giỏ hàng.');
+            }
+
+        });
+    }
+
+    function checkCartBeforeCheckout() {
+        $.ajax({
+            url: '@Url.Action("CheckCartBeforeCheckout", "Cart")',
+            type: 'GET',
+            success: function (response) {
+                if (response.cartHasItems)
+                    window.location.href = '@Url.Action("Checkout", "Cart")';
+                else
+                    alert('Giỏ hàng của bạn hiện đang trống. Vui lòng thêm sản phẩm trước khi thanh toán.');
+            },
+            error: function () {
+                alert('Có lỗi xảy ra khi kiểm tra giỏ hàng. Vui lòng thử lại.');
+            }
+        });
+    }
 </script>
 

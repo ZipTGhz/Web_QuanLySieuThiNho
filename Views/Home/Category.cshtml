@@ -151,3 +151,25 @@
     </div>
 </section>
 <!-- Product Section End -->
+
+<script>
+    function quickAddToCart(productId) {
+        $.ajax({
+            url: '@Url.Action("AddToCart", "Cart")',
+            type: 'POST',
+            data: { productId: productId, quantity: 1 },
+            success: function (response) {
+                if (response.success) {
+                    alert('Đã thêm sản phẩm vào giỏ hàng!');
+                    $('#cartCount').text(response.cartCount);
+                    $('.totalAmountCart').text(response.totalAmountCart + " VND");
+                } else {
+                    alert('Không thể thêm vào giỏ hàng vì vượt quá số lượng sản phẩm hiện có.');
+                }
+            },
+            error: function () {
+                alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.');
+            }
+        });
+    }
+</script>

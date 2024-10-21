@@ -54,7 +54,14 @@ For more information on enabling MVC for empty projects, visit https://go.micros
                                 <a href="#"><i class="fa fa-instagram"></i></a>
                             </div>
                             <div class="header__top__right__auth">
-                                <a href="#"><i class="fa fa-user"></i> Đăng nhập</a>
+                                @if (Context.Session.GetString("username") == null)
+                                {
+                                    <a asp-controller="Account" asp-action="Login"><i class="fa fa-user"></i> Đăng nhập</a>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Account" asp-action="Info"><i class="fa fa-user"></i> Xin chào, @Context.Session.GetString("username")</a>
+                                }
                             </div>
                         </div>
                     </div>
@@ -81,12 +88,12 @@ For more information on enabling MVC for empty projects, visit https://go.micros
                             <li>
                                 <a asp-controller="Home" asp-action="Cart">
                                     <i class="fa fa-shopping-bag"></i>
-                                    <span>@(Context.Session.GetInt32("CartCount") ?? 0)</span>
+                                    <span id="cartCount">@(Context.Session.GetInt32("CartCount") ?? 0)</span>
                                 </a>
                             </li>
 
                         </ul>
-                        <div class="header__cart__price">Tổng giá trị: <span>150.000 VND</span></div>
+                        <div class="header__cart__price">Tổng giá trị: <span class="totalAmountCart">@(Context.Session.GetString("TotalAmountCart") ?? "0") VND</span></div>
                     </div>
                 </div>
             </div>
@@ -100,7 +107,7 @@ For more information on enabling MVC for empty projects, visit https://go.micros
     <section class="hero hero-normal">
         <div class="container">
             <div class="row">
-                    @await Component.InvokeAsync("LoaiHangMenu")
+                @await Component.InvokeAsync("LoaiHangMenu")
                 <div class="col-lg-9">
                     <div class="hero__search">
                         <div class="hero__search__form">
@@ -205,8 +212,29 @@ For more information on enabling MVC for empty projects, visit https://go.micros
     <script src="~/js/owl.carousel.min.js"></script>
     <script src="~/js/main.js"></script>
 
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("LoadCartOnce", "Cart")',
+                type: 'get',
+                success: function (response) {
+                    if (response.isCartLoaded == false)
+                    {
+                        $('#cartCount').text(response.cartCount);
+                        $('.totalAmountCart').text(response.totalAmountCart + " VND");
+                    }
+                },
+                error: function() {
+                    alert('Có lỗi xảy ra khi tải giỏ hàng.');
+                }
+
+            });
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
 
 
 </body>
-
 </html>

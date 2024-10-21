@@ -1,0 +1,135 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@using Web_QuanLySieuThiNho.ViewModels
+@model CheckoutPageViewModel
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="../img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Thanh Toán</h2>
+                    <div class="breadcrumb__option">
+                        <a asp-controller="Home" asp-action="Index">Trang Chủ</a>
+                        <span>Thanh Toán</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+    <div class="container">
+        <div class="checkout__form">
+            <h4>Chi tiết thanh toán</h4>
+            <form asp-action="Checkout" method="post">
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+                        <div class="checkout__input">
+                            <p>Họ và tên<span style="color:red">*</span></p>
+                            <input asp-for="CustomerInfo.HoVaTen" />
+                            <span asp-validation-for="CustomerInfo.HoVaTen" class="text-danger"></span>
+                        </div>
+                        <div class="checkout__input">
+                            <p>Địa chỉ nhận hàng<span style="color:red">*</span></p>
+                            <input asp-for="CustomerInfo.DiaChi" class="checkout__input__add" />
+                            <span asp-validation-for="CustomerInfo.DiaChi" class="text-danger"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Phone<span style="color:red">*</span></p>
+                                    <input asp-for="CustomerInfo.SoDienThoai" />
+                                    <span asp-validation-for="CustomerInfo.SoDienThoai" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Email</p>
+                                    <input asp-for="CustomerInfo.Email" placeholder="(Tuỳ chọn)">
+                                    <span asp-validation-for="CustomerInfo.Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="checkout__input">
+                            <p>Ghi chú</p>
+                            <input asp-for="CustomerInfo.GhiChu" placeholder="Ghi chú về đơn hàng của bạn. (Tuỳ chọn)">
+                            <span asp-validation-for="CustomerInfo.GhiChu" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="checkout__order">
+                            <h4>Đơn hàng của bạn</h4>
+                            <table class="checkout-items-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sản phẩm</th>
+                                        <th>Giá</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.CartItems.Count; ++i)
+                                    {
+                                        <tr>
+                                            <td>@Model.CartItems[i].TenSanPham (x@(Model.CartItems[i].SoLuong))</td>
+                                            <td>@Model.CartItems[i].TongTien.ToString("#,##0") VND</td>
+                                        </tr>
+                                        <input type="hidden" asp-for="CartItems[i].MaSanPham" />
+                                        <input type="hidden" asp-for="CartItems[i].TenSanPham" />
+                                        <input type="hidden" asp-for="CartItems[i].SoLuong" />
+                                        <input type="hidden" asp-for="CartItems[i].TongTien" />
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="checkout__order__subtotal">
+                                Tổng tiền <span style="color: red;">@Context.Session.GetString("TotalAmountCart") VND</span>
+                            </div>
+                            <button type="submit" class="site-btn">ĐẶT HÀNG</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<!-- Checkout Section End -->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    .checkout-items-table {
+        width: 100%;
+        table-layout: auto;
+        border-collapse: collapse;
+    }
+
+        .checkout-items-table th, .checkout-items-table td {
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
+
+        .checkout-items-table th {
+            text-align: left; /* Căn chữ ở tiêu đề cột bên trái */
+        }
+
+            .checkout-items-table th:last-child {
+                text-align: right;
+            }
+
+        .checkout-items-table td {
+            text-align: left; /* Mặc định căn chữ bên trái cho tất cả các cột */
+        }
+
+            .checkout-items-table td:last-child {
+                text-align: right; /* Căn chữ bên phải cho cột giá */
+            }
+
+</style>

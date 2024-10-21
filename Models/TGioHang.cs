@@ -7,7 +7,7 @@ public partial class TGioHang
 {
     public int MaGioHang { get; set; }
 
-    public string? TenDangNhap { get; set; }
+    public string? MaKh { get; set; }
 
     public DateTime? NgayTao { get; set; }
 
@@ -15,7 +15,7 @@ public partial class TGioHang
 
     public decimal? TongTienGioHang { get; set; }
 
-    public virtual ICollection<TSanPhamGioHang> TSanPhamGioHangs { get; set; } = new List<TSanPhamGioHang>();
+    public virtual TKhachHang? MaKhNavigation { get; set; }
 
-    public virtual TTaiKhoan? TenDangNhapNavigation { get; set; }
+    public virtual ICollection<TSanPhamGioHang> TSanPhamGioHangs { get; set; } = new List<TSanPhamGioHang>();
 }

@@ -17,7 +17,7 @@ builder.Services.AddScoped<ILoaiHangRepo, LoaiHangRepo>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(option =>
 {
-    option.IdleTimeout = TimeSpan.FromMinutes(30);
+    option.IdleTimeout = TimeSpan.FromMinutes(60);
     option.Cookie.HttpOnly = true;
     option.Cookie.IsEssential = true;
 });
