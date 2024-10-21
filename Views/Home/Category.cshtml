@@ -115,24 +115,19 @@
             <div class="col-lg-9 col-md-7">
                 <div class="filter__item">
                     <div class="row">
-                        <div class="col-lg-4 col-md-5">
+                        <div class="col-lg-8 col-md-8">
                             <div class="filter__sort">
-                                <span>Sort By</span>
-                                <select>
-                                    <option value="0">Default</option>
-                                    <option value="0">Default</option>
+                                <span>Sắp xếp theo</span>
+                                <select id="sortSelect" onchange="sortProducts(this.value, @Model.PageNumber)">
+                                    <!option value="default" @(ViewBag.SortOrder == "default" ? "selected" : "")>Mặc định</!option>
+                                    <!option value="asc" @(ViewBag.SortOrder == "asc" ? "selected" : "")>Giá từ thấp lên cao</!option>
+                                    <!option value="desc" @(ViewBag.SortOrder == "desc" ? "selected" : "")>Giá từ cao xuống thấp</!option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4">
                             <div class="filter__found">
                                 <h6><span>@Model.Count</span> sản phẩm tìm thấy</h6>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-3">
-                            <div class="filter__option">
-                                <span class="icon_grid-2x2"></span>
-                                <span class="icon_ul"></span>
                             </div>
                         </div>
                     </div>
@@ -143,8 +138,23 @@
                         @await Html.PartialAsync("PartialProduct", item)
                     }
                 </div>
-                <div class="product__pagination">
-                    @Html.PagedListPager(Model, page => Url.Action("Category", new { categoryId = ViewBag.maLoaiHang, pageNumber = page }))
+                <div>
+                    @Html.PagedListPager(
+                             Model,
+                             page => Url.Action(
+                             "Category",
+                             "Home",
+                             new
+                             {
+                                 categoryId = ViewBag.maLoaiHang,
+                                 sortOrder = ViewBag.SortOrder,
+                                 pageNumber = page
+                             }),
+                             new PagedListRenderOptions()
+                    {
+                        LiElementClasses = new string[] { "page-item" },
+                        PageClasses = new string[] { "page-link" }
+                    })
                 </div>
             </div>
         </div>
@@ -153,6 +163,14 @@
 <!-- Product Section End -->
 
 <script>
+
+    function sortProducts(sortOrder, pageNumber) {
+        const categoryId = '@ViewBag.maLoaiHang';
+        const url = `@Url.Action("Category", "Home")?categoryId=${categoryId}&sortOrder=${sortOrder}&pageNumber=${pageNumber}`;
+        window.location.href = url;
+    }
+
+
     function quickAddToCart(productId) {
         $.ajax({
             url: '@Url.Action("AddToCart", "Cart")',
