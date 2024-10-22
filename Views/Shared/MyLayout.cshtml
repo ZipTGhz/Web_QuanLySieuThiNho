@@ -116,7 +116,7 @@ For more information on enabling MVC for empty projects, visit https://go.micros
                                     Tất cả loại hàng
                                     <span class="arrow_carrot-down"></span>
                                 </div>
-                                <input type="text" placeholder="Bạn cần tìm gì?">
+                                <input id="searchBox" onkeyup="fetchSuggestions()" type="text" placeholder="Bạn cần tìm gì?">
                                 <button type="submit" class="site-btn">TÌM</button>
                             </form>
                         </div>
@@ -130,6 +130,7 @@ For more information on enabling MVC for empty projects, visit https://go.micros
                             </div>
                         </div>
                     </div>
+                    <div id="suggestions"></div>
                 </div>
             </div>
         </div>
@@ -218,23 +219,109 @@ For more information on enabling MVC for empty projects, visit https://go.micros
                 url: '@Url.Action("LoadCartOnce", "Cart")',
                 type: 'get',
                 success: function (response) {
-                    if (response.isCartLoaded == false)
-                    {
+                    if (response.isCartLoaded == false) {
                         $('#cartCount').text(response.cartCount);
                         $('.totalAmountCart').text(response.totalAmountCart + " VND");
                     }
                 },
-                error: function() {
+                error: function () {
                     alert('Có lỗi xảy ra khi tải giỏ hàng.');
                 }
 
             });
         });
+
+        function fetchSuggestions() {
+            const query = document.getElementById('searchBox').value;
+            if (query.length >= 2) {
+                fetch(`/api/SearchAPI/GetSuggestions?query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        let suggestions = document.getElementById('suggestions');
+                        suggestions.innerHTML = ''; // Xóa gợi ý cũ
+                        data.forEach(item => {
+                            let imageUrl = '@Url.Content("../ProductImages/")' + item.anhSanPham;
+                            suggestions.innerHTML += `
+                                            <div class="suggestion-item">
+                                                <a href="/Home/Detail?productId=${item.maSanPham}">
+                                                            <img src= "${imageUrl}" alt="${item.tenSanPham}" class="suggestion-img" />
+                                                    <div class="suggestion-info">
+                                                        <span class="suggestion-name">${item.tenSanPham}</span>
+                                                        <span class="suggestion-price">${item.donGiaBan} VND</span>
+                                                    </div>
+                                                </a>
+                                            </div>`;
+                        });
+                    });
+            } else {
+                document.getElementById('suggestions').innerHTML = '';
+            }
+        }
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 
+    <style>
+        #suggestions {
+            border-bottom: 1px solid #ccc;
+            border-left: 1px solid #ccc;
+            border-right: 1px solid #ccc;
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            width: 69.5%;
+            z-index: 1000;
+        }
 
+            #suggestions div {
+                padding: 10px;
+                cursor: pointer;
+            }
+
+                #suggestions div:hover {
+                    background-color: #f0f0f0;
+                }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+            .suggestion-item a {
+                text-decoration: none;
+                display: flex;
+                width: 100%;
+                align-items: center;
+            }
+
+        .suggestion-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        .suggestion-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .suggestion-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .suggestion-price {
+            font-size: 16px;
+            color: #777;
+        }
+
+    </style>
 
 </body>
 </html>
