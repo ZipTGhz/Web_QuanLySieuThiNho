@@ -23,10 +23,11 @@
 		<PackageReference Include="X.PagedList.Web.Common" Version="8.0.7" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Areas\Admin\Data\" />
-		<Folder Include="Areas\Admin\Models\" />
-		<Folder Include="wwwroot\ProductImages\" />
-	</ItemGroup>
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="ViewModels\" />
+    <Folder Include="wwwroot\ProductImages\" />
+  </ItemGroup>
 
 </Project>

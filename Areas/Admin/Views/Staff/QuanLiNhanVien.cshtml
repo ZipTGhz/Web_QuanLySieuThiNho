@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "QuanLiNhanVien";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@using Web_QuanLySieuThiNho.Models
+@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<TNhanVien>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<h1>Danh Sách Nhân Viên</h1>
+
+<p>
+    <a asp-action="ThemNhanVienMoi">Thêm nhân viên mới</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Tên nhân viên
+            </th>
+            <th>
+                Giới tính
+            </th>
+            <th>
+               Ngày sinh
+            </th>
+            <th>
+                Số điện thoại 
+            </th>
+            <th>
+                Chức vụ
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                 <td>
+                    @Html.DisplayFor(modelItem => item.TenNv)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GioiTinh)
+                </td>
+                <td>
+                    @String.Format("{0:MM/dd/yyyy}", item.NgaySinh)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SoDienThoai)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChucVu)
+                </td>                    
+                <td>
+                    <a asp-action="SuaNhanVien" asp-route-manv="@item.MaNv">Sửa</a> |
+                    <a href="#" onclick="confirmDelete('@item.MaNv')">Xóa</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="product__pagination">
+    @Html.PagedListPager(Model, page => Url.Action("QuanLiNhanVien", new { pageNumber = page }))
+</div>
+<script>
+    function confirmDelete(manv) {
+        var result = confirm("Bạn có chắc chắn muốn xóa nhân viên này không?");
+        if (result) {
+            window.location.href = '/Admin/Staff/EditNhanVien?manv=' + manv;
+        }
+    }
+</script>

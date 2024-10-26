@@ -1,0 +1,124 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Web_QuanLySieuThiNho.Models.TSanPham
+
+@{
+    ViewData["Title"] = "ThemSanPhamMoi";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>ThemSanPhamMoi</h1>
+
+<h4>TSanPham</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-action="ThemSanPhamMoi" enctype="multipart/form-data" >
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+           
+            <div class="form-group">
+                <label asp-for="TenSanPham" class="control-label"></label>
+                <input asp-for="TenSanPham" class="form-control" />
+                <span asp-validation-for="TenSanPham" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaLoaiHang" class="control-label"></label>
+                <select asp-for="MaLoaiHang" class="form-control" asp-items="ViewBag.LoaiHangList">
+                    <option value="">-- Chọn loại hàng --</option>
+                </select>
+                <span asp-validation-for="MaLoaiHang" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DonGiaNhap" class="control-label"></label>
+                <input asp-for="DonGiaNhap" class="form-control" />
+                <span asp-validation-for="DonGiaNhap" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DonGiaBan" class="control-label"></label>
+                <input asp-for="DonGiaBan" class="form-control" />
+                <span asp-validation-for="DonGiaBan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SoLuong" class="control-label"></label>
+                <input asp-for="SoLuong" class="form-control" />
+                <span asp-validation-for="SoLuong" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TrongLuong" class="control-label"></label>
+                <input asp-for="TrongLuong" class="form-control" />
+                <span asp-validation-for="TrongLuong" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AnhSanPham" class="control-label"></label>
+
+                <!-- Input file ẩn -->
+                <input asp-for="AnhSanPham" type="file" accept="image/*" class="form-control"  id="AnhSanPham" style="display:none;" />
+
+                <!-- Nút chọn ảnh -->
+                <button type="button" class="btn btn-outline-secondary" id="btnSelectImage">Chọn ảnh</button>
+
+                <span asp-validation-for="AnhSanPham" class="text-danger"></span>
+
+                <!-- Phần này để hiển thị hình ảnh được chọn -->
+                <img id="previewImage" style="display:none; margin-top:10px; max-width: 200px;" />
+            </div>
+            <div class="form-group">
+                <label asp-for="MoTa" class="control-label"></label>
+                <input asp-for="MoTa" class="form-control" />
+                <span asp-validation-for="MoTa" class="text-danger"></span>
+            </div>
+           
+            <div class="form-group">
+                <input type="submit" value="Thêm" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<script>
+   
+    // Đảm bảo rằng mã JavaScript được thực thi sau khi DOM được tải
+    document.addEventListener('DOMContentLoaded', function() {
+        // Sự kiện cho nút chọn ảnh
+        document.getElementById('btnSelectImage').addEventListener('click', function() {
+            document.getElementById('AnhSanPham').click(); // Kích hoạt input file
+        });
+
+        // Sự kiện khi tệp được chọn
+        document.getElementById('AnhSanPham').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            document.getElementById('AnhSanPham').onchange = function () {
+                var file = this.files[0];
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    var previewImage = document.getElementById('previewImage');
+                    var selectedImageBase64 = document.getElementById('selectedImageBase64');
+
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block'; // Hiện ảnh
+                    selectedImageBase64.value = e.target.result; // Lưu ảnh dưới dạng base64 vào input hidden
+                };
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+            };
+            // Khi file được đọc xong
+            reader.onload = function(e) {
+                const previewImage = document.getElementById('previewImage');
+                previewImage.src = e.target.result; // Đặt nguồn hình ảnh
+                previewImage.style.display = 'block'; // Hiển thị hình ảnh
+            };
+
+            // Nếu có file được chọn
+            if (file) {
+                reader.readAsDataURL(file); // Đọc file dưới dạng Data URL
+            }
+        });
+    });
+</script>
+
