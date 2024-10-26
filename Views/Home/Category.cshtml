@@ -3,8 +3,9 @@
 *@
 @{
 }
+@using Web_QuanLySieuThiNho.ViewModels
 @using X.PagedList.Mvc.Core;
-@model X.PagedList.IPagedList<TSanPham>
+@model CategoryPageViewModel;
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="../img/breadcrumb.jpg">
     <div class="container">
@@ -50,62 +51,32 @@
                             <h4>Latest Products</h4>
                             <div class="latest-product__slider owl-carousel">
                                 <div class="latest-prdouct__slider__item">
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="../img/latest-product/lp-1.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="../img/latest-product/lp-2.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="../img/latest-product/lp-3.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
+                                    @for (int i = 0; i < Math.Min(3, Model.LastestProductList.Count); ++i)
+                                    {
+                                        <a asp-controller="Home" asp-action="Detail" asp-route-productId="@Model.LastestProductList[i].MaSanPham" class="latest-product__item">
+                                            <div class="latest-product__item__pic">
+                                                <img src=@Url.Content("../ProductImages/" + @Model.LastestProductList[i].AnhSanPham) alt="">
+                                            </div>
+                                            <div class="latest-product__item__text">
+                                                <h6>@Model.LastestProductList[i].TenSanPham</h6>
+                                                <span>@Model.LastestProductList[i].DonGiaBan.Value.ToString("#,##0") VND</span>
+                                            </div>
+                                        </a>
+                                    }
                                 </div>
                                 <div class="latest-prdouct__slider__item">
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="../img/latest-product/lp-1.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="../img/latest-product/lp-2.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="../img/latest-product/lp-3.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
+                                    @for (int i = 3; i < Model.LastestProductList.Count; ++i)
+                                    {
+                                        <a asp-controller="Home" asp-action="Detail" asp-route-productId="@Model.LastestProductList[i].MaSanPham" class="latest-product__item">
+                                            <div class="latest-product__item__pic">
+                                                <img src=@Url.Content("../ProductImages/" + @Model.LastestProductList[i].AnhSanPham) alt="">
+                                            </div>
+                                            <div class="latest-product__item__text">
+                                                <h6>@Model.LastestProductList[i].TenSanPham</h6>
+                                                <span>@Model.LastestProductList[i].DonGiaBan.Value.ToString("#,##0") VND</span>
+                                            </div>
+                                        </a>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -118,7 +89,7 @@
                         <div class="col-lg-8 col-md-8">
                             <div class="filter__sort">
                                 <span>Sắp xếp theo</span>
-                                <select id="sortSelect" onchange="sortProducts(this.value, @Model.PageNumber)">
+                                <select id="sortSelect" onchange="sortProducts(this.value, @Model.ProductList.PageNumber)">
                                     <!option value="default" @(ViewBag.SortOrder == "default" ? "selected" : "")>Mặc định</!option>
                                     <!option value="asc" @(ViewBag.SortOrder == "asc" ? "selected" : "")>Giá từ thấp lên cao</!option>
                                     <!option value="desc" @(ViewBag.SortOrder == "desc" ? "selected" : "")>Giá từ cao xuống thấp</!option>
@@ -127,20 +98,20 @@
                         </div>
                         <div class="col-lg-4 col-md-4">
                             <div class="filter__found">
-                                <h6><span>@Model.Count</span> sản phẩm tìm thấy</h6>
+                                <h6><span>@Model.ProductList.Count</span> sản phẩm tìm thấy</h6>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.ProductList)
                     {
                         @await Html.PartialAsync("PartialProduct", item)
                     }
                 </div>
                 <div>
                     @Html.PagedListPager(
-                             Model,
+                             Model.ProductList,
                              page => Url.Action(
                              "Category",
                              "Home",

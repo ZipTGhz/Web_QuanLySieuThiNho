@@ -1,19 +1,21 @@
-﻿@*
+﻿@using Web_QuanLySieuThiNho.ViewModels
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
-@model TSanPham
+@model DetailPageViewModel
+
 <section class="breadcrumb-section set-bg" data-setbg="../img/breadcrumb.jpg">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="breadcrumb__text">
-                    <h2>@Model.TenSanPham</h2>
+                    <h2>@Model.Product.TenSanPham</h2>
                     <div class="breadcrumb__option">
                         <a href="./index.html">Home</a>
                         <a href="./index.html">Vegetables</a>
-                        <span>@Model.TenSanPham</span>
+                        <span>@Model.Product.TenSanPham</span>
                     </div>
                 </div>
             </div>
@@ -29,7 +31,7 @@
                 <div class="product__details__pic">
                     <div class="product__details__pic__item">
                         <img class="product__details__pic__item--large"
-                             src=@Url.Content("../ProductImages/" + Model.AnhSanPham) alt="">
+                             src=@Url.Content("../ProductImages/" + Model.Product.AnhSanPham) alt="">
                     </div>
                     <div class="product__details__pic__slider owl-carousel">
                         <img data-imgbigurl="../img/product/details/product-details-2.jpg"
@@ -45,21 +47,21 @@
             </div>
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__text">
-                    <h3>@Model.TenSanPham</h3>
-                    <div class="product__details__price">@(Model.DonGiaBan.HasValue ? Model.DonGiaBan.Value.ToString("#,##0") + " VND" : "N/A")</div>
+                    <h3>@Model.Product.TenSanPham</h3>
+                    <div class="product__details__price">@(Model.Product.DonGiaBan.HasValue ? Model.Product.DonGiaBan.Value.ToString("#,##0") + " VND" : "N/A")</div>
                     <p>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </p>
                     <div class="product__details__quantity">
                         <div class="quantity">
                             <div class="qty">
-                                <input type="number" id="quantity" value="1" min="1" max="@Model.SoLuong">
+                                <input type="number" id="quantity" value="1" min="1" max="@Model.Product.SoLuong">
                             </div>
                         </div>
                     </div>
-                    <a href="javascript:void(0)" onclick="addToCart('@Model.MaSanPham', document.getElementById('quantity').value)" class="primary-btn">THÊM VÀO GIỎ</a>
+                    <a href="javascript:void(0)" onclick="addToCart('@Model.Product.MaSanPham', document.getElementById('quantity').value)" class="primary-btn">THÊM VÀO GIỎ</a>
                     <ul>
-                        <li><b>Tình trạng</b> <span>@(Model.SoLuong != 0 ? "Còn hàng" : "Hết hàng") </span></li>
+                        <li><b>Tình trạng</b> <span>@(Model.Product.SoLuong != 0 ? "Còn hàng" : "Hết hàng") </span></li>
                         <li><b>Vận chuyển</b> <span>Miễn phí giao hàng trong bán kính 2 km.</span></li>
-                        <li><b>Trọng lượng</b> <span>@Model.TrongLuong</span></li>
+                        <li><b>Trọng lượng</b> <span>@Model.Product.TrongLuong</span></li>
                     </ul>
                 </div>
             </div>
@@ -75,7 +77,7 @@
                         <div class="tab-pane active" id="tabs-1" role="tabpanel">
                             <div class="product__details__tab__desc">
                                 <h6>Thông tin sản phẩm</h6>
-                                <p>@Model.MoTa</p>
+                                <p>@Model.Product.MoTa</p>
                             </div>
                         </div>
                     </div>
@@ -96,66 +98,26 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="../img/product/product-1.jpg">
-                        <ul class="product__item__pic__hover">
-                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Crab Pool Security</a></h6>
-                        <h5>$30.00</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="../img/product/product-2.jpg">
-                        <ul class="product__item__pic__hover">
-                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Crab Pool Security</a></h6>
-                        <h5>$30.00</h5>
+            @foreach (var item in Model.RelatedProducts)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg=@Url.Content("../ProductImages/" + @item.AnhSanPham)>
+                            <ul class="product__item__pic__hover">
+                                <li>
+                                    <a href="javascript:void(0)" onclick="quickAddToCart('@item.MaSanPham')">
+                                        <i class="fa fa-shopping-cart"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="#">@item.TenSanPham</a></h6>
+                            <h5>@item.DonGiaBan.Value.ToString("#,##0") VND</h5>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="../img/product/product-3.jpg">
-                        <ul class="product__item__pic__hover">
-                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Crab Pool Security</a></h6>
-                        <h5>$30.00</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="../img/product/product-7.jpg">
-                        <ul class="product__item__pic__hover">
-                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Crab Pool Security</a></h6>
-                        <h5>$30.00</h5>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </section>
@@ -170,6 +132,26 @@
                 productId: productId,
                 quantity: quantity
             },
+            success: function (response) {
+                if (response.success) {
+                    alert('Đã thêm sản phẩm vào giỏ hàng!');
+                    $('#cartCount').text(response.cartCount);
+                    $('.totalAmountCart').text(response.totalAmountCart + " VND");
+                } else {
+                    alert('Không thể thêm vào giỏ hàng vì vượt quá số lượng sản phẩm hiện có.');
+                }
+            },
+            error: function () {
+                alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.');
+            }
+        });
+    }
+
+    function quickAddToCart(productId) {
+        $.ajax({
+            url: '@Url.Action("AddToCart", "Cart")',
+            type: 'POST',
+            data: { productId: productId, quantity: 1 },
             success: function (response) {
                 if (response.success) {
                     alert('Đã thêm sản phẩm vào giỏ hàng!');
