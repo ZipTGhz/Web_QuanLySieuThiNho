@@ -15,6 +15,8 @@ public partial class THoaDonBan
 
     public int? SoSanPham { get; set; }
 
+    public string? GhiChu { get; set; }
+
     public virtual TKhachHang? MaKhNavigation { get; set; }
 
     public virtual TNhanVien? MaNvNavigation { get; set; }

@@ -1,35 +1,29 @@
 ﻿@{
-    ViewData["Title"] = "DanhMucSanPham";
+    ViewData["Title"] = "Quan li nguoi dung";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 @using Web_QuanLySieuThiNho.Models
 @using X.PagedList.Mvc.Core
-@model X.PagedList.IPagedList<TSanPham>
+@model X.PagedList.IPagedList<TKhachHang>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<h1>Danh mục sản phẩm</h1>
+<h1>Danh sách khách hàng</h1>
 
-<p>
-    <a asp-action="ThemSanPhamMoi">Thêm sản phẩm mới</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                Tên sản phẩm
+                Tên khách hàng
             </th>
             <th>
-                Đơn giá nhập
+                Giới tính 
             </th>
             <th>
-                Đơn giá bán
+                Số điện thoại
             </th>
             <th>
-                Số lượng
+                Địa chỉ
             </th>
-            <th>
-                Trọng lượng
-            </th>
-            <th></th>
+           
         </tr>
     </thead>
     <tbody>
@@ -37,23 +31,21 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TenSanPham)
+                    @Html.DisplayFor(modelItem => item.TenKh)
+                </td>
+               
+                <td>
+                    @Html.DisplayFor(modelItem => item.GioiTinh)
                 </td>
                 <td>
-                    @item.DonGiaNhap.Value.ToString("#,##0")
+                    @Html.DisplayFor(modelItem => item.SoDienThoai)
                 </td>
                 <td>
-                     @item.DonGiaBan.Value.ToString("#,##0")
+                    @Html.DisplayFor(modelItem => item.DiaChi)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SoLuong)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TrongLuong) 
-                </td>
-                <td>
-                    <a asp-action="SuaSanPham" asp-route-masp="@item.MaSanPham">Sửa</a> |
-                    <a href="#" onclick="confirmDelete('@item.MaSanPham')">Xóa</a>
+                    <a asp-action="SuaKhachHang" asp-route-maKh="@item.MaKh">Sửa</a> |
+                    <a href="#" onclick="confirmDelete('@item.MaKh')">Xóa</a>
 
                 </td>
             </tr>
@@ -64,11 +56,11 @@
     @Html.PagedListPager(Model, page => Url.Action("DanhMucSanPham", new { pageNumber = page }))
 </div>
 <script>
-    function confirmDelete(masp) {
+    function confirmDelete(maKh) {
         var result = confirm("Bạn có chắc chắn muốn xóa nhân viên này không?");
         if (result) {
             // Nếu người dùng nhấn OK, chuyển hướng đến URL xóa nhân viên
-            window.location.href = '/Admin/Staff/XoaSanPham?masp=' + masp;
+            window.location.href = '/Admin/User/XoaKhachHang?maKh=' + maKh;
         }
     }
 </script>
