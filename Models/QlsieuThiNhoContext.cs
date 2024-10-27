@@ -47,7 +47,7 @@ public partial class QlsieuThiNhoContext : DbContext
     {
         modelBuilder.Entity<TChiTietHdb>(entity =>
         {
-            entity.HasKey(e => new { e.SoHdb, e.MaSanPham }).HasName("PK__tChiTiet__E86F9AC23AEC9B22");
+            entity.HasKey(e => new { e.SoHdb, e.MaSanPham }).HasName("PK__tChiTiet__E86F9AC2ACC69060");
 
             entity.ToTable("tChiTietHDB");
 
@@ -71,7 +71,7 @@ public partial class QlsieuThiNhoContext : DbContext
 
         modelBuilder.Entity<TChiTietHdn>(entity =>
         {
-            entity.HasKey(e => new { e.SoHdn, e.MaSanPham }).HasName("PK__tChiTiet__E86F9AF68CD327C4");
+            entity.HasKey(e => new { e.SoHdn, e.MaSanPham }).HasName("PK__tChiTiet__E86F9AF691969485");
 
             entity.ToTable("tChiTietHDN");
 
