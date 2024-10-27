@@ -33,9 +33,9 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
             var tongTienTheoThang = new decimal[12];
 
             // Lấy dữ liệu hóa đơn và tính tổng tiền theo từng tháng
-
+            var namHienTai = DateTime.Now.Year;
             var tongTienThang = _db.THoaDonBans
-                .Where(h => h.NgayBan.HasValue) // Chỉ lấy hóa đơn có ngày bán
+                .Where(h => h.NgayBan.HasValue && h.NgayBan.Value.Year == namHienTai) // Chỉ lấy hóa đơn có ngày bán
                 .GroupBy(h => h.NgayBan.Value.Month) // Nhóm theo tháng
                 .Select(g => new {
                     Thang = g.Key,
