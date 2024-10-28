@@ -13,8 +13,8 @@
                 <div class="breadcrumb__text">
                     <h2>@Model.Product.TenSanPham</h2>
                     <div class="breadcrumb__option">
-                        <a href="./index.html">Home</a>
-                        <a href="./index.html">Vegetables</a>
+                        <a asp-controller="Home" asp-action="Index">Trang chủ</a>
+                        <a asp-controller="Home" asp-action="Category" asp-route-categoryId="@ViewBag.CategoryID">@ViewBag.CategoryName</a>
                         <span>@Model.Product.TenSanPham</span>
                     </div>
                 </div>

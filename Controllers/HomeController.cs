@@ -51,6 +51,9 @@ namespace Web_QuanLySieuThiNho.Controllers
 
             var categoryPage = new CategoryPageViewModel(lastestProductList, pagedList);
 
+            var categoryName = _db.TLoaiHangs.FirstOrDefault(x => x.MaLoaiHang == categoryId).TenLoaiHang;
+
+            ViewBag.CategoryName = categoryName;
             ViewBag.maLoaiHang = categoryId;
             ViewBag.SortOrder = sortOrder;
             return View(categoryPage);
@@ -67,6 +70,11 @@ namespace Web_QuanLySieuThiNho.Controllers
                 Product = product,
                 RelatedProducts = relatedProducts,
             };
+
+            var categoryName = _db.TLoaiHangs.FirstOrDefault(x => x.MaLoaiHang == categoryID).TenLoaiHang;
+
+            ViewBag.CategoryID = categoryID;
+            ViewBag.CategoryName = categoryName;
 
             return View(detailPage);
         }

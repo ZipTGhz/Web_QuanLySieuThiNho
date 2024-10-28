@@ -12,10 +12,10 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="breadcrumb__text">
-                    <h2>Organi Shop</h2>
+                    <h2>@ViewBag.CategoryName</h2>
                     <div class="breadcrumb__option">
-                        <a href="./index.html">Home</a>
-                        <span>Shop</span>
+                        <a asp-controller="Home" asp-action="Index">Trang chủ</a>
+                        <span>@ViewBag.CategoryName</span>
                     </div>
                 </div>
             </div>
@@ -30,31 +30,14 @@
             <div class="col-lg-3 col-md-5">
                 <div class="sidebar">
                     <div class="sidebar__item">
-                        <h4>Price</h4>
-                        <div class="price-range-wrap">
-                            <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
-                                 data-min="10" data-max="540">
-                                <div class="ui-slider-range ui-corner-all ui-widget-header"></div>
-                                <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
-                                <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
-                            </div>
-                            <div class="range-slider">
-                                <div class="price-input">
-                                    <input type="text" id="minamount">
-                                    <input type="text" id="maxamount">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="sidebar__item">
                         <div class="latest-product__text">
-                            <h4>Latest Products</h4>
+                            <h4>SP mới nhất</h4>
                             <div class="latest-product__slider owl-carousel">
                                 <div class="latest-prdouct__slider__item">
                                     @for (int i = 0; i < Math.Min(3, Model.LastestProductList.Count); ++i)
                                     {
                                         <a asp-controller="Home" asp-action="Detail" asp-route-productId="@Model.LastestProductList[i].MaSanPham" class="latest-product__item">
-                                            <div class="latest-product__item__pic">
+                                            <div class="latest-product__item__pic" style="height: 110px; width: 110px;">
                                                 <img src=@Url.Content("../ProductImages/" + @Model.LastestProductList[i].AnhSanPham) alt="">
                                             </div>
                                             <div class="latest-product__item__text">
@@ -68,7 +51,7 @@
                                     @for (int i = 3; i < Model.LastestProductList.Count; ++i)
                                     {
                                         <a asp-controller="Home" asp-action="Detail" asp-route-productId="@Model.LastestProductList[i].MaSanPham" class="latest-product__item">
-                                            <div class="latest-product__item__pic">
+                                            <div class="latest-product__item__pic" style="height: 110px; width: 110px;">
                                                 <img src=@Url.Content("../ProductImages/" + @Model.LastestProductList[i].AnhSanPham) alt="">
                                             </div>
                                             <div class="latest-product__item__text">
