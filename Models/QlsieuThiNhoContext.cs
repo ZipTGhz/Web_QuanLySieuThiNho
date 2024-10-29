@@ -227,6 +227,9 @@ public partial class QlsieuThiNhoContext : DbContext
             entity.Property(e => e.TenNv)
                 .HasMaxLength(200)
                 .HasColumnName("TenNV");
+            entity.Property(e => e.TrangThai)
+                .HasMaxLength(50)
+                .HasDefaultValue("DANGLAM");
 
             entity.HasOne(d => d.TenDangNhapNavigation).WithMany(p => p.TNhanViens)
                 .HasForeignKey(d => d.TenDangNhap)

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Web_QuanLySieuThiNho.Models;
+using Web_QuanLySieuThiNho.ViewModels;
 using X.PagedList;
 
 namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
@@ -34,23 +35,33 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         public IActionResult ThemSanPhamMoi()
         {
             ViewBag.LoaiHangList = new SelectList(_db.TLoaiHangs, "MaLoaiHang", "TenLoaiHang");
+            ViewBag.NCCList = new SelectList(_db.TNhaCungCaps, "MaNcc", "TenNcc");
 
             return View();
         }
         [Route("ThemSanPhamMoi")]
         [HttpPost]
-        public IActionResult ThemSanPhamMoi(TSanPham sanpham, IFormFile AnhSanPham)
+        public IActionResult ThemSanPhamMoi(SanPhamNCCViewModel viewModel, IFormFile AnhSanPham)
         {
-            Debug.WriteLine($"AnhSanPham: {sanpham.AnhSanPham}");
+
             string sqlQuery = @"
-    SELECT TOP 1 MaSanPham 
-    FROM TSanPham
-    ORDER BY CAST(SUBSTRING(MaSanPham, 3, LEN(MaSanPham) - 2) AS INT) DESC";
+                SELECT TOP 1 MaSanPham 
+                FROM TSanPham
+                ORDER BY CAST(SUBSTRING(MaSanPham, 3, LEN(MaSanPham) - 2) AS INT) DESC";
+
+            string sqlQueryMcc = @"
+                SELECT TOP 1 SoHDN 
+                FROM THoaDonNhap
+                ORDER BY CAST(SUBSTRING(SoHDN, 3, LEN(SoHDN) - 2) AS INT) DESC";
 
             var maxMaSanPham = _db.TSanPhams
                 .FromSqlRaw(sqlQuery)
                 .Select(sp => sp.MaSanPham)
                 .FirstOrDefault();
+            var maxMaNcc = _db.THoaDonNhaps
+               .FromSqlRaw(sqlQueryMcc)
+               .Select(sp => sp.SoHdn)
+               .FirstOrDefault();
 
             string numberPart = maxMaSanPham.Substring(2); // Lấy phần số sau "SP"
 
@@ -75,16 +86,47 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                 {
                     newMaSanPham = $"SP{number}"; // 3 số => không cần số 0
                 }
-            sanpham.MaSanPham = newMaSanPham;
+                viewModel.MaSanPham = newMaSanPham;
             }
+
+            string numberPartNCC = maxMaNcc.Substring(2); // Lấy phần số sau "SP"
+
+            // Chuyển đổi thành số và tăng lên 1
+            if (int.TryParse(numberPartNCC, out int numberHdn))
+            {
+                numberHdn++; // Tăng giá trị lên 1
+
+                // Tạo mã sản phẩm mới
+                string newHDN;
+
+                // Định dạng mã sản phẩm mới theo yêu cầu
+                if (number < 10)
+                {
+                    newHDN = $"HD00{numberHdn}"; // 1 số => 2 số 0
+                }
+                else if (number < 100)
+                {
+                    newHDN = $"HD0{numberHdn}"; // 2 số => 1 số 0
+                }
+                else
+                {
+                    newHDN = $"HD{numberHdn}"; // 3 số => không cần số 0
+                }
+                viewModel.SoHdn = newHDN;
+            }
+            Debug.WriteLine($"MaLoaiHangNavigation: {viewModel.MaNcc}");
+
+            ViewBag.NCCList = new SelectList(_db.TNhaCungCaps, "MaNcc", "TenNcc");
             ViewBag.LoaiHangList = new SelectList(_db.TLoaiHangs, "MaLoaiHang", "TenLoaiHang");
             ModelState.Remove("MaLoaiHangNavigation");
             ModelState.Remove("MaSanPham");
+            ModelState.Remove("SoHdn");
+
 
 
 
             // Lấy loại hàng từ CSDL
-            string maLoaiHang = sanpham.MaLoaiHang;
+            string maLoaiHang = viewModel.MaLoaiHang;
 
             // Ghi lại giá trị để kiểm tra
 
@@ -101,13 +143,13 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
             else
             {
                 // Gán giá trị cho MaLoaiHangNavigation
-                sanpham.MaLoaiHangNavigation = loaiHang;
-                Debug.WriteLine($"MaLoaiHangNavigation: {sanpham.MaLoaiHangNavigation}");
+                viewModel.MaLoaiHangNavigation = loaiHang;
+                Debug.WriteLine($"MaLoaiHangNavigation: {viewModel.MaLoaiHangNavigation}");
 
             }
 
-            
 
+            
             if (ModelState.IsValid)
             {
                 var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ProductImages");
@@ -117,12 +159,12 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                 {
                     Directory.CreateDirectory(uploadFolder);
                 }
-
+               
                 // Tạo tên file mới (bạn có thể thay đổi logic đặt tên file nếu cần)
                 var fileExtension = Path.GetExtension(AnhSanPham.FileName); // Ví dụ: ".png", ".jpg", v.v.
 
                 // Tạo tên file mới bằng mã sản phẩm, giữ nguyên phần mở rộng
-                var fileName = $"{sanpham.MaSanPham}{fileExtension}";  // Tạo tên duy nhất
+                var fileName = $"{viewModel.MaSanPham}{fileExtension}";  // Tạo tên duy nhất
                 var filePath = Path.Combine(uploadFolder, fileName);
 
                 // Lưu ảnh vào thư mục đã chỉ định
@@ -130,13 +172,45 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                 {
                      AnhSanPham.CopyToAsync(stream); 
                 }
-                sanpham.AnhSanPham = fileName;
-                _db.TSanPhams.Add(sanpham);
+                viewModel.AnhSanPham = fileName;
+                var sanPham = new TSanPham
+                {
+                    MaSanPham = viewModel.MaSanPham,
+                    TenSanPham = viewModel.TenSanPham,
+                    MaLoaiHang = viewModel.MaLoaiHang,
+                    DonGiaNhap = viewModel.DonGiaNhap,
+                    DonGiaBan = viewModel.DonGiaBan,
+                    SoLuong = viewModel.SoLuong,
+                    TrongLuong = viewModel.TrongLuong,
+                    MoTa = viewModel.MoTa,
+                    AnhSanPham = viewModel.AnhSanPham
+                };
+                var hoaDonNhap = new THoaDonNhap
+                {
+                  SoHdn= viewModel.SoHdn,
+                  MaNcc= viewModel.MaNcc,
+                  MaNv="NV001"
+                };
+                var chiTietHoaDonNhap = new TChiTietHdn
+                {
+                    SoHdn = viewModel.SoHdn,
+                    MaSanPham = viewModel.MaSanPham,
+                    Slnhap = viewModel.SoLuong
+                };
+                _db.TChiTietHdns.Add(chiTietHoaDonNhap);
+               
+                _db.THoaDonNhaps.Add(hoaDonNhap);
+             
+
+               
+
+                _db.TSanPhams.Add(sanPham);
                 _db.SaveChanges();
                 return RedirectToAction("DanhMucSanPham");
 
-            }                  
-            return View(sanpham);
+            }
+           
+            return View();
         }
 
         [Route("SuaSanPham")]
@@ -217,16 +291,60 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         {
             var checkSanPhamGioHang=_db.TSanPhamGioHangs.Where(x=>x.MaSanPham == masp).ToList();
             var chiTietHDB = _db.TChiTietHdbs.Where(x => x.MaSanPham == masp).ToList();
-            if(checkSanPhamGioHang.Count>0&& chiTietHDB.Count > 0)
+
+
+            if (checkSanPhamGioHang.Count>0|| chiTietHDB.Count > 0)
             {
-                ModelState.AddModelError(string.Empty, "Sản phẩm này không được phép xóa vì đang có trong giỏ hàng hoặc hóa đơn.");
-                return View();
+                TempData["ErrorMessage"] = "Sản phẩm này không được phép xóa vì đang có trong giỏ hàng hoặc hóa đơn.";
+                return RedirectToAction("DanhMucSanPham");
             }
-            _db.Remove(_db.TSanPhams.Find(masp)); 
-            _db.SaveChanges();
+            var chiTietHdn = _db.TChiTietHdns.FirstOrDefault(x => x.MaSanPham == masp);
+      
+            if (chiTietHdn!=null)  {
+                var sanpham = _db.TSanPhams.Find(masp);
+                var soHDN = chiTietHdn.SoHdn;
+                Debug.WriteLine("T1: " + soHDN);
+                Debug.WriteLine("T2: " + masp);
+                _db.Remove(_db.TChiTietHdns.Find(soHDN, masp));
+                _db.SaveChanges();
+                _db.Remove(sanpham);
+                _db.SaveChanges();
+                var oldImagePath = Path.Combine("wwwroot", "ProductImages", sanpham.AnhSanPham);
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+                var countHDB = _db.TChiTietHdns.Where(x => x.SoHdn == soHDN).ToList();
+                Debug.WriteLine("T3: " + countHDB.Count);
+
+                if (countHDB.Count == 0)
+                {
+                    _db.Remove(_db.THoaDonNhaps.Find(soHDN));
+                }
+                _db.SaveChanges();
+
+                // Get the SoHDN value
+            }
+            else
+            {
+                var sanpham = _db.TSanPhams.Find(masp);
+                _db.Remove(sanpham);
+                _db.SaveChanges();
+                var oldImagePath = Path.Combine("wwwroot", "ProductImages", sanpham.AnhSanPham);
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+            }
+          
+            // You can use soHDN for any further processing here
+
+
+
+
 
             return RedirectToAction("DanhMucSanPham");
- 
+
         }
     }
 }

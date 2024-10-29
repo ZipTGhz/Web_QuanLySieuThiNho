@@ -1,5 +1,5 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model Web_QuanLySieuThiNho.Models.TSanPham
+﻿@model Web_QuanLySieuThiNho.ViewModels.SanPhamNCCViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewData["Title"] = "ThemSanPhamMoi";
@@ -22,10 +22,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="MaLoaiHang" class="control-label"></label>
-                <select asp-for="MaLoaiHang" class="form-control" asp-items="ViewBag.LoaiHangList">
+                <select asp-for="MaLoaiHang" class="form-control" asp-items="@ViewBag.LoaiHangList">
                     <option value="">-- Chọn loại hàng --</option>
                 </select>
                 <span asp-validation-for="MaLoaiHang" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaNcc" class="control-label"></label>
+                <select asp-for="MaNcc" class="form-control" asp-items="@ViewBag.NCCList">
+                    <option value="">-- Chọn loại hàng --</option>
+                </select>
+                <span asp-validation-for="MaNcc" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DonGiaNhap" class="control-label"></label>

@@ -56,8 +56,10 @@
                     <a href="#" onclick="confirmDelete('@item.MaSanPham')">Xóa</a>
 
                 </td>
+
             </tr>
         }
+       
     </tbody>
 </table>
 <div class="product__pagination">
@@ -68,7 +70,13 @@
         var result = confirm("Bạn có chắc chắn muốn xóa nhân viên này không?");
         if (result) {
             // Nếu người dùng nhấn OK, chuyển hướng đến URL xóa nhân viên
-            window.location.href = '/Admin/Staff/XoaSanPham?masp=' + masp;
+            window.location.href = '/Admin/Home/XoaSanPham?masp=' + masp;
         }
     }
 </script>
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        alert("@Html.Raw(TempData["ErrorMessage"])");
+    </script>
+}
