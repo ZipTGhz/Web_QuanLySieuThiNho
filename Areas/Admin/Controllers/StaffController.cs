@@ -24,7 +24,7 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         public IActionResult QuanLiNhanVien(int pageNumber = 1)
         {
             int pageSize = 6;
-            var staffs = _db.TNhanViens.AsNoTracking().OrderBy(x => x.ChucVu);
+            var staffs = _db.TNhanViens.AsNoTracking().Where(x => x.TrangThai == "DangLam").OrderBy(x => x.ChucVu);
             PagedList<TNhanVien> pagedList = new PagedList<TNhanVien>(staffs, pageNumber, pageSize);
             return View(pagedList);
         }
@@ -131,9 +131,13 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult EditNhanVien(string manv)
         {
-          
-            _db.Remove(_db.TNhanViens.Find(manv));
-            _db.SaveChanges();
+
+            var nhanVien = _db.TNhanViens.Find(manv);
+            if (nhanVien != null)
+            {
+                nhanVien.TrangThai = "SATHAI";
+                _db.SaveChanges();
+            }
 
             return RedirectToAction("QuanLiNhanVien");
 

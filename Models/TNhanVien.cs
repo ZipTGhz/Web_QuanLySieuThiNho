@@ -21,6 +21,8 @@ public partial class TNhanVien
 
     public string? ChucVu { get; set; }
 
+    public string TrangThai { get; set; } = null!;
+
     public virtual ICollection<THoaDonBan> THoaDonBans { get; set; } = new List<THoaDonBan>();
 
     public virtual ICollection<THoaDonNhap> THoaDonNhaps { get; set; } = new List<THoaDonNhap>();

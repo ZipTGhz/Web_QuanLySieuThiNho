@@ -47,7 +47,7 @@ public partial class QlsieuThiNhoContext : DbContext
     {
         modelBuilder.Entity<TChiTietHdb>(entity =>
         {
-            entity.HasKey(e => new { e.SoHdb, e.MaSanPham }).HasName("PK__tChiTiet__E86F9AC2ACC69060");
+            entity.HasKey(e => new { e.SoHdb, e.MaSanPham }).HasName("PK__tChiTiet__E86F9AC2E72CB0AF");
 
             entity.ToTable("tChiTietHDB");
 
@@ -71,7 +71,7 @@ public partial class QlsieuThiNhoContext : DbContext
 
         modelBuilder.Entity<TChiTietHdn>(entity =>
         {
-            entity.HasKey(e => new { e.SoHdn, e.MaSanPham }).HasName("PK__tChiTiet__E86F9AF691969485");
+            entity.HasKey(e => new { e.SoHdn, e.MaSanPham }).HasName("PK__tChiTiet__E86F9AF6E43C6274");
 
             entity.ToTable("tChiTietHDN");
 
@@ -227,6 +227,9 @@ public partial class QlsieuThiNhoContext : DbContext
             entity.Property(e => e.TenNv)
                 .HasMaxLength(200)
                 .HasColumnName("TenNV");
+            entity.Property(e => e.TrangThai)
+                .HasMaxLength(50)
+                .HasDefaultValue("DANGLAM");
 
             entity.HasOne(d => d.TenDangNhapNavigation).WithMany(p => p.TNhanViens)
                 .HasForeignKey(d => d.TenDangNhap)
