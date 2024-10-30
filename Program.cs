@@ -7,11 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//??c connection string t? appsetting.json
 var connectionString = builder.Configuration.GetConnectionString("QlsieuThiNhoContext");
 builder.Services.AddDbContext<QlsieuThiNhoContext>(x=>x.UseSqlServer(connectionString));
 
-builder.Services.AddScoped<ILoaiHangRepo, LoaiHangRepo>();  
-
+builder.Services.AddScoped<ILoaiHangRepo, LoaiHangRepo>();
+builder.Services.AddSession();
+builder.Services.AddHttpContextAccessor();  // Thêm IHttpContextAccessor
 
 var app = builder.Build();
 
@@ -29,6 +31,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

@@ -1,0 +1,69 @@
+﻿@{
+	ViewData["Title"] = "Đăng nhập";
+	Layout = "~/Views/Shared/Components/Login_Signup/_SignUpLayout.cshtml";
+}
+@model TTaiKhoan
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<div class="signinform">
+	<!-- container -->
+	<div class="container">
+		<!-- main content -->
+		<div class="w3l-form-info">
+			<div class="w3_info">
+				<h1>Đăng nhập</h1>
+				@* <form asp-controller="Account" asp-action="Verify" method="post"> *@
+				@using(Html.BeginForm("Login","Account", FormMethod.Post))
+				{
+					<div class="input-group">
+						<span class="">
+							<i class="fas fa-user" aria-hidden="true"></i>
+						</span>
+						@Html.TextBoxFor(x => x.TenDangNhap, new {@placeholder = "Tên đăng nhập", required = "required", autofocus = "autofocus", @aria_label = "Tên đăng nhập" })
+					</div>
+
+					<div class="input-group">
+						<span><i class="fas fa-key" aria-hidden="true"></i></span>
+						@Html.TextBoxFor(x => x.MatKhau, new { @placeholder = "Mật khẩu",type = "Password", required = "required", autofocus = "autofocus", @aria_label = "Mật khẩu" })
+						@* <input type="Password" name="MatKhau" placeholder="Mật khẩu" required=""> *@
+					</div>
+					<div class="form-row bottom">
+						<div class="form-check">
+							<input type="checkbox" id="remenber" name="remenber" value="remenber">
+							<label for="remenber"> Remember me?</label>
+						</div>
+						<a href="#url" class="forgot">Forgot password?</a>
+					</div>
+					<button class="btn btn-primary btn-block" type="submit">Login</button>
+				}
+				@* </form> *@
+				<p class="continue"><span>or Login with</span></p>
+				<div class="social-login">
+					<a href="#facebook">
+						<div class="facebook">
+							<span class="fab fa-facebook-f" aria-hidden="true"></span>
+
+						</div>
+					</a>
+					<a href="#twitter">
+						<div class="twitter">
+							<span class="fab fa-twitter" aria-hidden="true"></span>
+						</div>
+					</a>
+					<a href="#google">
+						<div class="google">
+							<span class="fab fa-google" aria-hidden="true"></span>
+						</div>
+					</a>
+				</div>
+				<p class="account">Bạn không có tài khoản? <a asp-controller="Account" asp-action="SignUp">Tạo tài khoản</a></p>
+				<p class="account">Bạn muốn quay trở lại màn hình chính
+					<a asp-controller="Home" asp-action="Index">nhấn vào đây</a>
+				</p>
+			</div>
+		</div>
+		<!-- //main content -->
+	</div>
+</div>
+
+
+

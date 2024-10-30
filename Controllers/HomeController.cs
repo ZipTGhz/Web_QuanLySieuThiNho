@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Web_QuanLySieuThiNho.Models;
+using Web_QuanLySieuThiNho.Models.Authentication;
 using X.PagedList;
 
 namespace Web_QuanLySieuThiNho.Controllers
@@ -15,16 +16,18 @@ namespace Web_QuanLySieuThiNho.Controllers
         {
             _logger = logger;
         }
+        
 
         public IActionResult Index(int pageNumber = 1)
         {
             int pageSize = 12;
             var products = db.TSanPhams.AsNoTracking().OrderBy(x => x.TenSanPham);
 
-            PagedList<TSanPham> pagedList = new PagedList<TSanPham>(products, pageNumber, pageSize);
+              PagedList<TSanPham> pagedList = new PagedList<TSanPham>(products, pageNumber, pageSize);
 
             return View(pagedList);
         }
+        [Authentication]
         public IActionResult Category(string categoryId, int pageNumber = 1)
         {
             int pageSize = 12;

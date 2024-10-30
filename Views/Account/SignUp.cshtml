@@ -1,0 +1,46 @@
+﻿@{
+	ViewData["Title"] = "Create Account";
+	Layout = "~/Views/Shared/Components/Login_Signup/_SignUpLayout.cshtml";
+}
+@model TTaiKhoan
+
+
+<div class="signinform">
+	<!-- container -->
+	<div class="container">	
+		<!-- main content -->
+		<div class="w3l-form-info">
+			<div class="w3_info">
+				<h2>Tạo tài khoản</h2>
+				<form asp-action="SignUp" method="post">
+					<div class="input-group">
+						<span><i class="fas fa-user" aria-hidden="true"></i></span>
+						@Html.TextBoxFor(m => m.TenDangNhap, new { @type = "text", placeholder = "Tên đăng nhập", required = "required" })
+						@* <input asp-for="TenDangNhap" type="text" placeholder="Tên đăng nhập" required="" /> *@
+					</div>
+					<div class="input-group">
+						<span><i class="fas fa-key" aria-hidden="true"></i></span>
+						@Html.TextBoxFor(m => m.MatKhau, new { @type = "password", placeholder = "Mật khẩu", required = "required" })
+						@* <input asp-for="MatKhau" type="password" placeholder="Mật khẩu" required="" /> *@
+					</div>
+					@* <div class="input-group">
+						<label for="LoaiTaiKhoan">Loại tài khoản:</label>
+						<select asp-for="LoaiTaiKhoan" required="">
+							<option value="Quản lý">Quản lý</option>
+							<option value="Nhân viên">Nhân viên</option>
+						</select>
+					</div> *@
+					<button class="btn btn-primary btn-block" type="submit">Đăng ký</button>
+				</form>
+				@if (ViewBag.ErrorMessage != null)
+				{
+					<p style="color:red;">@ViewBag.ErrorMessage</p>
+				}
+				<p class="account">Đã có tài khoản? <a href="/Account/Login">Đăng nhập</a></p>
+			</div>
+			<!-- //main content -->
+		</div>
+		<!-- //container -->
+	</div>
+
+
