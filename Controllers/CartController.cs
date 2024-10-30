@@ -85,7 +85,7 @@ namespace Web_QuanLySieuThiNho.Controllers
                 .FirstOrDefault(x => x.MaKh == customerID && x.TrangThai == "ChuaThanhToan");
             return cartIncluded;
         }
-        [Authentication]
+        //[Authentication]
         public IActionResult LoadCartOnce()
         {
             var username = HttpContext.Session.GetString("username");

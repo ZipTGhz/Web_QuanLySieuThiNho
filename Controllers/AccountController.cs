@@ -14,7 +14,7 @@ namespace Web_QuanLySieuThiNho.Controllers
 		[HttpGet]
 		public IActionResult Login()
 		{
-			if(HttpContext.Session.GetString("TenDangNhap") == null)
+			if(HttpContext.Session.GetString("username") == null)
 			{
 				return View();
 			}
@@ -26,12 +26,12 @@ namespace Web_QuanLySieuThiNho.Controllers
 		[HttpPost]
 		public IActionResult Login(TTaiKhoan tk)
 		{
-			if (HttpContext.Session.GetString("TenDangNhap") == null)
+			if (HttpContext.Session.GetString("username") == null)
 			{
 				var u = _db.TTaiKhoans.Where(x=>x.TenDangNhap.Equals(tk.TenDangNhap) && x.MatKhau.Equals(tk.MatKhau)).FirstOrDefault();
 				if (u != null)
 				{
-					HttpContext.Session.SetString("TenDangNhap", tk.TenDangNhap.ToString());
+					HttpContext.Session.SetString("username", tk.TenDangNhap.ToString());
 					return RedirectToAction("Index","Home");
 				}
 				else
@@ -108,7 +108,7 @@ namespace Web_QuanLySieuThiNho.Controllers
 
         public IActionResult UserProfile()
         {
-			var tenDangNhap = HttpContext.Session.GetString("TenDangNhap");
+			var tenDangNhap = HttpContext.Session.GetString("username");
 			if (string.IsNullOrEmpty(tenDangNhap))
 			{
 				return RedirectToAction("Login", "Account");
@@ -141,7 +141,7 @@ namespace Web_QuanLySieuThiNho.Controllers
 		[HttpPost]
 		public IActionResult Save(UserProfileViewModel model)
 		{
-			var tenDangNhap = HttpContext.Session.GetString("TenDangNhap");
+			var tenDangNhap = HttpContext.Session.GetString("username");
 
 			if (string.IsNullOrEmpty(tenDangNhap))
 			{
