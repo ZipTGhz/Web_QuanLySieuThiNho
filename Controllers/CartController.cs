@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Web_QuanLySieuThiNho.Extensions;
 using Web_QuanLySieuThiNho.Models;
+using Web_QuanLySieuThiNho.Models.Authentication;
 using Web_QuanLySieuThiNho.Util;
 using Web_QuanLySieuThiNho.ViewModels;
 
@@ -11,6 +12,7 @@ namespace Web_QuanLySieuThiNho.Controllers
     public class CartController : Controller
     {
         private QlsieuThiNhoContext _db = new QlsieuThiNhoContext();
+        [Authentication]
         public IActionResult Index()
         {
             var cart = GetCartIncludedExtended();
@@ -83,6 +85,7 @@ namespace Web_QuanLySieuThiNho.Controllers
                 .FirstOrDefault(x => x.MaKh == customerID && x.TrangThai == "ChuaThanhToan");
             return cartIncluded;
         }
+        [Authentication]
         public IActionResult LoadCartOnce()
         {
             var username = HttpContext.Session.GetString("username");
@@ -100,6 +103,7 @@ namespace Web_QuanLySieuThiNho.Controllers
             });
         }
         [HttpPost]
+        [Authentication]
         public IActionResult AddToCart(string productId, int quantity)
         {
             var cart = GetCartIncluded();
@@ -142,6 +146,7 @@ namespace Web_QuanLySieuThiNho.Controllers
             });
         }
         [HttpPost]
+        [Authentication]
         public IActionResult UpdateCartItemQuantity(string productId, int quantity)
         {
             var cart = GetCartIncluded();
@@ -164,6 +169,7 @@ namespace Web_QuanLySieuThiNho.Controllers
             });
         }
         [HttpPost]
+        [Authentication]
         public IActionResult RemoveCartItem(string productId)
         {
             var cart = GetCartIncluded();
@@ -183,6 +189,7 @@ namespace Web_QuanLySieuThiNho.Controllers
                 totalAmountCart = cart.TongTienGioHang.Value.ToString("#,##0"),
             });
         }
+        [Authentication]
         public IActionResult CheckCartBeforeCheckout()
         {
             var cart = GetCart();
@@ -190,6 +197,7 @@ namespace Web_QuanLySieuThiNho.Controllers
             bool cartHasItems = cartItem != null;
             return Json(new { cartHasItems });
         }
+        [Authentication]
         public IActionResult Checkout()
         {
             CheckoutPageViewModel model = GetCartInfo();
@@ -218,6 +226,7 @@ namespace Web_QuanLySieuThiNho.Controllers
             return model;
         }
         [HttpPost]
+        [Authentication]
         public IActionResult Checkout(CheckoutPageViewModel model)
         {
             if (ModelState.IsValid)

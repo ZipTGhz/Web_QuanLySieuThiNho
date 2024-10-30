@@ -18,8 +18,7 @@ namespace Web_QuanLySieuThiNho.Controllers
         {
             _logger = logger;
         }
-        
-
+        [Authentication]
         public IActionResult Index(int pageNumber = 1)
         {
             HttpContext.Session.SetString("username", "user");
@@ -61,6 +60,7 @@ namespace Web_QuanLySieuThiNho.Controllers
             ViewBag.SortOrder = sortOrder;
             return View(categoryPage);
         }
+        [Authentication]
         public IActionResult Detail(string productId)
         {
             var product = _db.TSanPhams.AsNoTracking().SingleOrDefault(x => x.MaSanPham == productId);
@@ -81,6 +81,7 @@ namespace Web_QuanLySieuThiNho.Controllers
 
             return View(detailPage);
         }
+        [Authentication]
         public IActionResult Cart()
         {
             return RedirectToAction("Index", "Cart");
