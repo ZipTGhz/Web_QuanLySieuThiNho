@@ -124,8 +124,10 @@
             navItems.forEach(function (item) {
                 var itemPath = new URL(item.href).pathname;
 
-                // So sánh đường dẫn hiện tại với liên kết của mục
-                if (currentPath === itemPath) {
+                // Check for specific keywords in the URL path to set the active state
+                if ((currentPath.includes('/Admin/User/') && itemPath.includes('/Admin/User/')) ||
+                    (currentPath.includes('/Admin/Staff/') && itemPath.includes('/Admin/Staff/')) ||
+                    (currentPath.includes('/Admin/Product/') && itemPath.includes('/Admin/Product/'))) {
                     setActive(item);
                 }
 

@@ -75,6 +75,8 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                 nhanVien.MaNv = newMaNV;
             }
             ModelState.Remove("MaNv");
+            ModelState.Remove("TrangThai");
+            nhanVien.TrangThai = "DANGLAM";
 
             if (!ModelState.IsValid)
             {
@@ -87,7 +89,8 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                 return View(nhanVien);
             }
             if (ModelState.IsValid)
-            {                        
+            { 
+                
                 _db.TNhanViens.Add(nhanVien);
                 _db.SaveChanges();
                 return RedirectToAction("QuanLiNhanVien");
@@ -111,6 +114,8 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
 
            
             ModelState.Remove("MaNv");
+            ModelState.Remove("TrangThai");
+            nhanVien.TrangThai = "DANGLAM";
 
 
             // Kiểm tra xem loại hàng có tồn tại hay không
@@ -131,14 +136,12 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult EditNhanVien(string manv)
         {
-
             var nhanVien = _db.TNhanViens.Find(manv);
             if (nhanVien != null)
             {
                 nhanVien.TrangThai = "SATHAI";
                 _db.SaveChanges();
             }
-
             return RedirectToAction("QuanLiNhanVien");
 
         }
