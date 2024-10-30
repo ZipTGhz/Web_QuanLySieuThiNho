@@ -1,0 +1,73 @@
+﻿@model Web_QuanLySieuThiNho.ViewModels.UserProfileViewModel
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+	ViewData["Title"] = "Thông tin khách hàng";
+	Layout = "~/Views/Shared/Components/Login_Signup/_SignUpLayout.cshtml";
+}
+<!DOCTYPE html>
+
+
+<body>
+
+	<h3>Thông tin khách hàng</h3>
+	<hr />
+	<div class="row">
+		<div class="col-md-4">
+			<form asp-action="Save" asp-controller="Account" method="post">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<div class="form-group">
+					<label asp-for="MaKh" class="control-label">Mã khách hàng</label>
+					<input asp-for="MaKh" class=" form-control" readonly/>
+					<span asp-validation-for="MaKh" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="TenDangNhap" class="control-label">Tên đăng nhập</label>
+					<input asp-for="TenDangNhap" class="form-control" readonly />
+					<span asp-validation-for="TenDangNhap" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="MatKhau" class="control-label">Mật khẩu</label>
+					<input asp-for="MatKhau" class=" form-control" />
+					<span asp-validation-for="MatKhau" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="TenKh" class="control-label">Tên khách hàng</label>
+					<input asp-for="TenKh" class="form-control" />
+					<span asp-validation-for="TenKh" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="GioiTinh" class="control-label">Giới tính</label>
+					<input asp-for="GioiTinh" class="form-control" />
+
+					<span asp-validation-for="GioiTinh" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="SoDienThoai" class="control-label"></label>
+					<input asp-for="SoDienThoai" class="form-control" />
+					<span asp-validation-for="SoDienThoai" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="DiaChi" class="control-label"></label>
+					<input asp-for="DiaChi" class="form-control" />
+					<span asp-validation-for="DiaChi" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<input type="submit" value="Save" class="btn btn-primary" />
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div>
+		<a asp-controller="Home" asp-action="Index">Quay về màn hình chính</a> |
+		<a href="javascript:void(0);" onclick="confirmLogout('@Url.Action("LogOut", "Account")')">
+			Đăng xuất
+		</a>
+	</div>
+
+</body>
+</html>

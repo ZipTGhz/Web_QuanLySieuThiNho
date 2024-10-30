@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//??c connection string t? appsetting.json
 var connectionString = builder.Configuration.GetConnectionString("QlsieuThiNhoContext");
 builder.Services.AddDbContext<QlsieuThiNhoContext>(x => x.UseSqlServer(connectionString));
 
@@ -28,6 +29,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/Login/Index";
     });
+builder.Services.AddHttpContextAccessor();  // Th�m IHttpContextAccessor
 
 var app = builder.Build();
 

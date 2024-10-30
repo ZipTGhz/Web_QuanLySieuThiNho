@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Web_QuanLySieuThiNho.Models;
 
 public partial class TTaiKhoan
 {
+    [Required]
+
     public string TenDangNhap { get; set; } = null!;
 
     public string? MatKhau { get; set; }
