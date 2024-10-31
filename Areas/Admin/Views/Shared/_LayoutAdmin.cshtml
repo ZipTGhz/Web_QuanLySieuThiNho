@@ -127,7 +127,8 @@
                 // Check for specific keywords in the URL path to set the active state
                 if ((currentPath.includes('/Admin/User/') && itemPath.includes('/Admin/User/')) ||
                     (currentPath.includes('/Admin/Staff/') && itemPath.includes('/Admin/Staff/')) ||
-                    (currentPath.includes('/Admin/Product/') && itemPath.includes('/Admin/Product/'))) {
+                    (currentPath.includes('/Admin/Product/') && itemPath.includes('/Admin/Product/'))||
+                    (currentPath.includes('/Admin/Report') && itemPath.includes('/Admin/Report'))){
                     setActive(item);
                 }
 

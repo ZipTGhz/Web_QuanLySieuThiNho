@@ -6,9 +6,8 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>ThemSanPhamMoi</h1>
+<h1>Thêm sản phẩm</h1>
 
-<h4>TSanPham</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -16,46 +15,46 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
            
             <div class="form-group">
-                <label asp-for="TenSanPham" class="control-label"></label>
+                <label asp-for="TenSanPham" class="control-label">Tên sản phẩm</label>
                 <input asp-for="TenSanPham" class="form-control" />
                 <span asp-validation-for="TenSanPham" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MaLoaiHang" class="control-label"></label>
+                <label asp-for="MaLoaiHang" class="control-label">Loại hàng</label>
                 <select asp-for="MaLoaiHang" class="form-control" asp-items="@ViewBag.LoaiHangList">
                     <option value="">-- Chọn loại hàng --</option>
                 </select>
                 <span asp-validation-for="MaLoaiHang" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MaNcc" class="control-label"></label>
+                <label asp-for="MaNcc" class="control-label">Nhà cung cấp</label>
                 <select asp-for="MaNcc" class="form-control" asp-items="@ViewBag.NCCList">
                     <option value="">-- Chọn loại hàng --</option>
                 </select>
                 <span asp-validation-for="MaNcc" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DonGiaNhap" class="control-label"></label>
+                <label asp-for="DonGiaNhap" class="control-label">Đơn giá nhập</label>
                 <input asp-for="DonGiaNhap" class="form-control" />
                 <span asp-validation-for="DonGiaNhap" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DonGiaBan" class="control-label"></label>
+                <label asp-for="DonGiaBan" class="control-label">Đơn giá bán</label>
                 <input asp-for="DonGiaBan" class="form-control" />
                 <span asp-validation-for="DonGiaBan" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SoLuong" class="control-label"></label>
+                <label asp-for="SoLuong" class="control-label">Số lượng</label>
                 <input asp-for="SoLuong" class="form-control" />
                 <span asp-validation-for="SoLuong" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TrongLuong" class="control-label"></label>
+                <label asp-for="TrongLuong" class="control-label">Trọng lượng</label>
                 <input asp-for="TrongLuong" class="form-control" />
                 <span asp-validation-for="TrongLuong" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AnhSanPham" class="control-label"></label>
+                <label asp-for="AnhSanPham" class="control-label">Ảnh</label>
 
                 <!-- Input file ẩn -->
                 <input asp-for="AnhSanPham" type="file" accept="image/*" class="form-control"  id="AnhSanPham" style="display:none;" />
@@ -71,7 +70,7 @@
 
             </div>
             <div class="form-group">
-                <label asp-for="MoTa" class="control-label"></label>
+                <label asp-for="MoTa" class="control-label">Mô tả</label>
                 <input asp-for="MoTa" class="form-control" />
                 <span asp-validation-for="MoTa" class="text-danger"></span>
             </div>

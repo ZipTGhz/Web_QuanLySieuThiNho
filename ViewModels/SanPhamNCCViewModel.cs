@@ -1,21 +1,27 @@
-﻿using Web_QuanLySieuThiNho.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using Web_QuanLySieuThiNho.Models;
 
 namespace Web_QuanLySieuThiNho.ViewModels
 {
     public class SanPhamNCCViewModel
     {
         public string MaSanPham { get; set; } = null!;
-
+        [Required(ErrorMessage = "Tên sản phẩm là bắt buộc.")]
         public string? TenSanPham { get; set; }
-
+       
         public string MaLoaiHang { get; set; } = null!;
-
+        [Required(ErrorMessage = "Đơn giá nhập là bắt buộc.")]
+        [Range(0, double.MaxValue, ErrorMessage = "Đơn giá nhập phải là một số dương.")]
         public decimal? DonGiaNhap { get; set; }
+        [Required(ErrorMessage = "Đơn giá bán là bắt buộc.")]
+        [Range(0, double.MaxValue, ErrorMessage = "Đơn giá bán phải là một số dương.")]
 
         public decimal? DonGiaBan { get; set; }
-
+        [Required(ErrorMessage = "Số lượng là bắt buộc.")]
+        [Range(0, int.MaxValue, ErrorMessage = "Số lượng phải là một số nguyên không âm.")]
         public int? SoLuong { get; set; }
-
+        [Required(ErrorMessage = "Trọng lượng là bắt buộc.")]
+        [StringLength(50, ErrorMessage = "Trọng lượng không được vượt quá 50 ký tự.")]
         public string? TrongLuong { get; set; }
 
         public string? MoTa { get; set; }
@@ -33,6 +39,5 @@ namespace Web_QuanLySieuThiNho.ViewModels
 
         public virtual ICollection<TChiTietHdn> TChiTietHdns { get; set; } = new List<TChiTietHdn>();
 
-        public virtual ICollection<TSanPhamGioHang> TSanPhamGioHangs { get; set; } = new List<TSanPhamGioHang>();
     }
 }

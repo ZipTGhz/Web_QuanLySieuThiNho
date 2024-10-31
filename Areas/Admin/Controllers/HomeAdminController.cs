@@ -219,18 +219,29 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         {
 
             ViewBag.LoaiHangList = new SelectList(_db.TLoaiHangs, "MaLoaiHang", "TenLoaiHang");
-            var sanPham = _db.TSanPhams.Find(masp);
-            ViewBag.Anh = sanPham.AnhSanPham;
-
+            var viewModel = _db.TSanPhams.Find(masp);
+            ViewBag.Anh = viewModel.AnhSanPham;
+            var sanPham = new SanPhamNCCViewModel
+            {
+                MaSanPham = viewModel.MaSanPham,
+                TenSanPham = viewModel.TenSanPham,
+                MaLoaiHang = viewModel.MaLoaiHang,
+                DonGiaNhap = viewModel.DonGiaNhap,
+                DonGiaBan = viewModel.DonGiaBan,
+                SoLuong = viewModel.SoLuong,
+                TrongLuong = viewModel.TrongLuong,
+                MoTa = viewModel.MoTa,
+                AnhSanPham = viewModel.AnhSanPham
+            };
             return View(sanPham);
         }
         [Route("SuaSanPham")]
         [HttpPost]
-        public IActionResult SuaSanPham(TSanPham sanpham, IFormFile AnhSanPham)
+        public IActionResult SuaSanPham(SanPhamNCCViewModel viewModel, IFormFile AnhSanPham)
         {
             var sanPham1 = _db.TSanPhams
                    .AsNoTracking()
-                   .FirstOrDefault(sp => sp.MaSanPham == sanpham.MaSanPham);
+                   .FirstOrDefault(sp => sp.MaSanPham == viewModel.MaSanPham);
 
             ViewBag.Anh = sanPham1.AnhSanPham;
             if (AnhSanPham != null && AnhSanPham.Length > 0)
@@ -243,7 +254,7 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                 }
 
                 // Lưu ảnh mới
-                var newFileName = sanpham.MaSanPham + Path.GetExtension(AnhSanPham.FileName);
+                var newFileName = viewModel.MaSanPham + Path.GetExtension(AnhSanPham.FileName);
                 var newPath = Path.Combine("wwwroot", "ProductImages", newFileName);
 
                 using (var stream = new FileStream(newPath, FileMode.Create))
@@ -251,38 +262,51 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                     AnhSanPham.CopyTo(stream);
                 }
 
-                sanpham.AnhSanPham = newFileName; // Cập nhật tên file trong sanpham
+                viewModel.AnhSanPham = newFileName; // Cập nhật tên file trong sanpham
             }
             else
             {
-                sanpham.AnhSanPham = sanPham1.AnhSanPham; // Giữ lại ảnh cũ
+                viewModel.AnhSanPham = sanPham1.AnhSanPham; // Giữ lại ảnh cũ
             }
             ViewBag.LoaiHangList = new SelectList(_db.TLoaiHangs, "MaLoaiHang", "TenLoaiHang");
             ModelState.Remove("MaSanPham");
             ModelState.Remove("AnhSanPham");
             ModelState.Remove("MaLoaiHangNavigation");
+            ModelState.Remove("SoHdn"); 
+                ModelState.Remove("MaNcc");
 
-            string maLoaiHang = sanpham.MaLoaiHang;
-            Debug.WriteLine($"MaLoaiHang: {sanpham.MaSanPham}");
+            string maLoaiHang = viewModel.MaLoaiHang;
+            Debug.WriteLine($"MaLoaiHang: {viewModel.MaSanPham}");
 
             // Ghi lại giá trị để kiểm tra
 
             // Tìm loại hàng tương ứng trong cơ sở dữ liệu
             var loaiHang = _db.TLoaiHangs.FirstOrDefault(lh => lh.MaLoaiHang == maLoaiHang);
-            sanpham.MaLoaiHangNavigation = loaiHang;
+            viewModel.MaLoaiHangNavigation = loaiHang;
            
             // Kiểm tra xem loại hàng có tồn tại hay không
 
 
             if (ModelState.IsValid)
             {
-                
-                _db.Update(sanpham);
+                var sanPham = new TSanPham
+                {
+                    MaSanPham = viewModel.MaSanPham,
+                    TenSanPham = viewModel.TenSanPham,
+                    MaLoaiHang = viewModel.MaLoaiHang,
+                    DonGiaNhap = viewModel.DonGiaNhap,
+                    DonGiaBan = viewModel.DonGiaBan,
+                    SoLuong = viewModel.SoLuong,
+                    TrongLuong = viewModel.TrongLuong,
+                    MoTa = viewModel.MoTa,
+                    AnhSanPham = viewModel.AnhSanPham
+                };
+                _db.Update(sanPham);
                 _db.SaveChanges();
                 return RedirectToAction("DanhMucSanPham");
 
             }
-            return View(sanpham);
+            return View(viewModel);
         }
 
         [Route("XoaSanPham")]

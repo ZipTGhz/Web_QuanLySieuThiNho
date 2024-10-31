@@ -58,26 +58,5 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
             return View(customer);
         }
 
-        [Route("XoaKhachHang")]
-        [HttpGet]
-        public IActionResult XoaKhachHang(string maKh)
-        {
-            var khachHang = _db.TKhachHangs.Find(maKh);
-            
-            if (khachHang == null)
-            {
-                // Nếu không tìm thấy khách hàng, có thể trả về một thông báo lỗi hoặc trang lỗi
-                return NotFound();
-            }
-
-            // Lấy thuộc tính TenDangNhap từ đối tượng khách hàng
-            string tenDangNhap = khachHang.TenDangNhap;
-            _db.Remove(_db.TKhachHangs.Find(maKh));
-            _db.Remove(_db.TTaiKhoans.Find(tenDangNhap));
-            _db.SaveChanges();
-
-            return RedirectToAction("QuanLiKhachHang");
-
-        }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Web_QuanLySieuThiNho.Models;
+using Web_QuanLySieuThiNho.ViewModels;
 using X.PagedList;
 
 namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
@@ -33,11 +34,11 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         public IActionResult ThemNhanVienMoi()
         {
           
-            return View();
+            return View(new NhanVienViewModel());
         }
         [Route("ThemNhanVienMoi")]
         [HttpPost]
-        public IActionResult ThemNhanVienMoi(TNhanVien nhanVien)
+        public IActionResult ThemNhanVienMoi(NhanVienViewModel viewModel)
         {
             string sqlQuery = @"
     SELECT TOP 1 MaNv 
@@ -72,11 +73,11 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                 {
                     newMaNV = $"NV{number}"; // 3 số => không cần số 0
                 }
-                nhanVien.MaNv = newMaNV;
+                viewModel.MaNv = newMaNV;
             }
             ModelState.Remove("MaNv");
             ModelState.Remove("TrangThai");
-            nhanVien.TrangThai = "DANGLAM";
+            viewModel.TrangThai = "DANGLAM";
 
             if (!ModelState.IsValid)
             {
@@ -86,17 +87,27 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                 {
                     Console.WriteLine(error.ErrorMessage); // Hoặc sử dụng logger
                 }
-                return View(nhanVien);
+                return View(viewModel);
             }
             if (ModelState.IsValid)
-            { 
-                
+            {
+                var nhanVien = new TNhanVien
+                {
+                    MaNv = viewModel.MaNv,
+                    TenNv = viewModel.TenNv,
+                    GioiTinh = viewModel.GioiTinh,
+                    NgaySinh = viewModel.NgaySinh,
+                    SoDienThoai = viewModel.SoDienThoai,
+                    DiaChi = viewModel.DiaChi,
+                    ChucVu = viewModel.ChucVu,
+                    TrangThai = viewModel.TrangThai
+                };
                 _db.TNhanViens.Add(nhanVien);
                 _db.SaveChanges();
                 return RedirectToAction("QuanLiNhanVien");
 
             }
-            return View(nhanVien);
+            return View(viewModel);
         }
 
         [Route("SuaNhanVien")]
@@ -104,18 +115,34 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         public IActionResult SuaNhanVien(string manv)
         {
             var nhanVien = _db.TNhanViens.Find(manv);
+            if (nhanVien == null)
+            {
+                return NotFound();
+            }
 
-            return View(nhanVien);
+            var viewModel = new NhanVienViewModel
+            {
+                MaNv = nhanVien.MaNv,
+                TenNv = nhanVien.TenNv,
+                GioiTinh = nhanVien.GioiTinh,
+                NgaySinh = nhanVien.NgaySinh,
+                SoDienThoai = nhanVien.SoDienThoai,
+                DiaChi = nhanVien.DiaChi,
+                ChucVu = nhanVien.ChucVu,
+                TrangThai = nhanVien.TrangThai
+            };
+
+            return View(viewModel);
         }
         [Route("SuaNhanVien")]
         [HttpPost]
-        public IActionResult SuaNhanVien(TNhanVien nhanVien)
+        public IActionResult SuaNhanVien(NhanVienViewModel viewModel)
         {
 
            
             ModelState.Remove("MaNv");
             ModelState.Remove("TrangThai");
-            nhanVien.TrangThai = "DANGLAM";
+           
 
 
             // Kiểm tra xem loại hàng có tồn tại hay không
@@ -123,13 +150,23 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-
+                var nhanVien = new TNhanVien
+                {
+                    MaNv = viewModel.MaNv,
+                    TenNv = viewModel.TenNv,
+                    GioiTinh = viewModel.GioiTinh,
+                    NgaySinh = viewModel.NgaySinh,
+                    SoDienThoai = viewModel.SoDienThoai,
+                    DiaChi = viewModel.DiaChi,
+                    ChucVu = viewModel.ChucVu,
+                    TrangThai = "DANGLAM"
+                };
                 _db.Update(nhanVien);
                 _db.SaveChanges();
                 return RedirectToAction("QuanLiNhanVien");
 
             }
-            return View(nhanVien);
+            return View(viewModel);
         }
 
         [Route("EditNhanVien")]

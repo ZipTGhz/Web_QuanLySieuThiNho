@@ -44,8 +44,8 @@
                     @Html.DisplayFor(modelItem => item.DiaChi)
                 </td>
                 <td>
-                    <a asp-action="SuaKhachHang" asp-route-maKh="@item.MaKh">Sửa</a> |
-                    <a href="#" onclick="confirmDelete('@item.MaKh')">Xóa</a>
+                    <a asp-action="SuaKhachHang" asp-route-maKh="@item.MaKh">Sửa</a> 
+                   
 
                 </td>
             </tr>
@@ -55,12 +55,3 @@
 <div class="product__pagination">
     @Html.PagedListPager(Model, page => Url.Action("DanhMucSanPham", new { pageNumber = page }))
 </div>
-<script>
-    function confirmDelete(maKh) {
-        var result = confirm("Bạn có chắc chắn muốn xóa nhân viên này không?");
-        if (result) {
-            // Nếu người dùng nhấn OK, chuyển hướng đến URL xóa nhân viên
-            window.location.href = '/Admin/User/XoaKhachHang?maKh=' + maKh;
-        }
-    }
-</script>

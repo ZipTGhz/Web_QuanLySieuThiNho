@@ -6,16 +6,15 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>SuaKhachHang</h1>
+<h1>Sửa khách hàng</h1>
 
-<h4>TKhachHang</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="SuaKhachHang" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>     
             <div class="form-group">
-                <label asp-for="MaKh" class="control-label"></label>
+                <label asp-for="MaKh" class="control-label">Mã khách hàng</label>
                 <input asp-for="MaKh" class="form-control" disabled="disabled" />
                 <input type="hidden" asp-for="MaKh" />
                 <span asp-validation-for="MaKh" class="text-danger"></span>
