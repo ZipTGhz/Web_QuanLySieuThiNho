@@ -21,7 +21,6 @@ namespace Web_QuanLySieuThiNho.Controllers
         [Authentication]
         public IActionResult Index(int pageNumber = 1)
         {
-            //HttpContext.Session.SetString("username", "user");
             int pageSize = 9;
             var products = _db.TSanPhams.AsNoTracking().Where(x=> x.SoLuong > 0).OrderBy(x => x.TenSanPham);
 

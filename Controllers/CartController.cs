@@ -21,7 +21,7 @@ namespace Web_QuanLySieuThiNho.Controllers
         }
         private TGioHang GetCart()
         {
-            string username = HttpContext.Session.GetString("username");
+            string username = HttpContext.Session.GetString("TenDangNhap");
             string customerID = Helpers.GetCustomerID(username);
             var cart = _db.TGioHangs.FirstOrDefault(x => x.MaKh == customerID && x.TrangThai == "ChuaThanhToan");
             if (cart == null)
@@ -40,7 +40,7 @@ namespace Web_QuanLySieuThiNho.Controllers
         }
         private TGioHang GetCartIncluded()
         {
-            string username = HttpContext.Session.GetString("username");
+            string username = HttpContext.Session.GetString("TenDangNhap");
             string customerID = Helpers.GetCustomerID(username);
             var cart = _db.TGioHangs.FirstOrDefault(x => x.MaKh == customerID && x.TrangThai == "ChuaThanhToan");
             if (cart == null)
@@ -63,7 +63,7 @@ namespace Web_QuanLySieuThiNho.Controllers
         }
         private TGioHang GetCartIncludedExtended()
         {
-            string username = HttpContext.Session.GetString("username");
+            string username = HttpContext.Session.GetString("TenDangNhap");
             string customerID = Helpers.GetCustomerID(username);
             var cart = _db.TGioHangs.FirstOrDefault(x => x.MaKh == customerID && x.TrangThai == "ChuaThanhToan");
             if (cart == null)
@@ -88,7 +88,7 @@ namespace Web_QuanLySieuThiNho.Controllers
         //[Authentication]
         public IActionResult LoadCartOnce()
         {
-            var username = HttpContext.Session.GetString("username");
+            var username = HttpContext.Session.GetString("TenDangNhap");
             var cartLoaded = HttpContext.Session.GetString("CartLoaded");
             if (username == null || cartLoaded != null)
                 return Json(new { isCartLoaded = true });
@@ -255,7 +255,7 @@ namespace Web_QuanLySieuThiNho.Controllers
                 employeeID = _db.TNhanViens.Skip(randomIndex).FirstOrDefault()?.MaNv;
             }
 
-            string? username = HttpContext.Session.GetString("username");
+            string? username = HttpContext.Session.GetString("TenDangNhap");
             string customerID = Helpers.GetCustomerID(username);
             var customer = _db.TKhachHangs.FirstOrDefault(x => x.MaKh == customerID);
 

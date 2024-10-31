@@ -238,7 +238,7 @@ For more information on enabling MVC for empty projects, visit https://go.micros
     </footer>
     <!-- Footer Section End -->
     <!-- Js Plugins -->
-<script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
 	<script src="~/js/bootstrap.min.js"></script>
 	<script src="~/js/jquery.nice-select.min.js"></script>
 	<script src="~/js/jquery-ui.min.js"></script>
@@ -248,8 +248,7 @@ For more information on enabling MVC for empty projects, visit https://go.micros
 	<script src="~/js/main.js"></script>
 	<script src="~/js/site.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	// <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-	// <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         $(document).ready(function () {
             $.ajax({
@@ -280,15 +279,15 @@ For more information on enabling MVC for empty projects, visit https://go.micros
                         data.forEach(item => {
                             let imageUrl = '@Url.Content("../ProductImages/")' + item.anhSanPham;
                             suggestions.innerHTML += `
-                                                            <div class="suggestion-item">
-                                                                <a href="/Home/Detail?productId=${item.maSanPham}">
-                                                                            <img src= "${imageUrl}" alt="${item.tenSanPham}" class="suggestion-img" />
-                                                                    <div class="suggestion-info">
-                                                                        <span class="suggestion-name">${item.tenSanPham}</span>
-                                                                        <span class="suggestion-price">${item.donGiaBan} VND</span>
-                                                                    </div>
-                                                                </a>
-                                                            </div>`;
+                                <div class="suggestion-item">
+                                    <a href="/Home/Detail?productId=${item.maSanPham}">
+                                                <img src= "${imageUrl}" alt="${item.tenSanPham}" class="suggestion-img" />
+                                        <div class="suggestion-info">
+                                            <span class="suggestion-name">${item.tenSanPham}</span>
+                                            <span class="suggestion-price">${item.donGiaBan} VND</span>
+                                        </div>
+                                    </a>
+                                </div>`;
                         });
                     });
             } else {
