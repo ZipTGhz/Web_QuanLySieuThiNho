@@ -11,6 +11,7 @@
 <p>
     <a asp-action="ThemSanPhamMoi">Thêm sản phẩm mới</a>
 </p>
+<p>@TempData["ErrorMessage"]</p>
 <table class="table">
     <thead>
         <tr>
@@ -69,14 +70,8 @@
     function confirmDelete(masp) {
         var result = confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?");
         if (result) {
-            // Nếu người dùng nhấn OK, chuyển hướng đến URL xóa nhân viên
             window.location.href = '/Admin/Home/XoaSanPham?masp=' + masp;
         }
     }
 </script>
-@if (TempData["ErrorMessage"] != null)
-{
-    <script>
-        alert("@Html.Raw(TempData["ErrorMessage"])");
-    </script>
-}
+

@@ -29,7 +29,7 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         {
             int pageSize = 6;
             var products = _db.TSanPhams.AsNoTracking().OrderBy(x => x.DonGiaBan);
-            PagedList<TSanPham> pagedList = new PagedList<TSanPham>(products, pageNumber, pageSize);
+            PagedList<TSanPham> pagedList = new PagedList<TSanPham>(products, pageNumber, pageSize);           
             return View(pagedList);
         }
         [Route("ThemSanPhamMoi")]
@@ -38,14 +38,14 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         {
             ViewBag.LoaiHangList = new SelectList(_db.TLoaiHangs, "MaLoaiHang", "TenLoaiHang");
             ViewBag.NCCList = new SelectList(_db.TNhaCungCaps, "MaNcc", "TenNcc");
-
+            TempData["ErrorMessage"] = null;
             return View();
         }
         [Route("ThemSanPhamMoi")]
         [HttpPost]
         public IActionResult ThemSanPhamMoi(SanPhamNCCViewModel viewModel, IFormFile AnhSanPham)
         {
-
+            
             string sqlQuery = @"
                 SELECT TOP 1 MaSanPham 
                 FROM TSanPham
@@ -65,54 +65,46 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                .Select(sp => sp.SoHdn)
                .FirstOrDefault();
 
-            string numberPart = maxMaSanPham.Substring(2); // Lấy phần số sau "SP"
+            string numberPart = maxMaSanPham.Substring(2); 
 
-            // Chuyển đổi thành số và tăng lên 1
             if (int.TryParse(numberPart, out int number))
             {
-                number++; // Tăng giá trị lên 1
+                number++; 
 
-                // Tạo mã sản phẩm mới
                 string newMaSanPham;
-
-                // Định dạng mã sản phẩm mới theo yêu cầu
                 if (number < 10)
                 {
-                    newMaSanPham = $"SP00{number}"; // 1 số => 2 số 0
+                    newMaSanPham = $"SP00{number}"; 
                 }
                 else if (number < 100)
                 {
-                    newMaSanPham = $"SP0{number}"; // 2 số => 1 số 0
+                    newMaSanPham = $"SP0{number}"; 
                 }
                 else
                 {
-                    newMaSanPham = $"SP{number}"; // 3 số => không cần số 0
+                    newMaSanPham = $"SP{number}"; 
                 }
                 viewModel.MaSanPham = newMaSanPham;
             }
 
-            string numberPartNCC = maxMaNcc.Substring(2); // Lấy phần số sau "SP"
+            string numberPartNCC = maxMaNcc.Substring(2); 
 
-            // Chuyển đổi thành số và tăng lên 1
             if (int.TryParse(numberPartNCC, out int numberHdn))
             {
-                numberHdn++; // Tăng giá trị lên 1
+                numberHdn++; 
 
-                // Tạo mã sản phẩm mới
                 string newHDN;
-
-                // Định dạng mã sản phẩm mới theo yêu cầu
                 if (number < 10)
                 {
-                    newHDN = $"HD00{numberHdn}"; // 1 số => 2 số 0
+                    newHDN = $"HD00{numberHdn}"; 
                 }
                 else if (number < 100)
                 {
-                    newHDN = $"HD0{numberHdn}"; // 2 số => 1 số 0
+                    newHDN = $"HD0{numberHdn}"; 
                 }
                 else
                 {
-                    newHDN = $"HD{numberHdn}"; // 3 số => không cần số 0
+                    newHDN = $"HD{numberHdn}"; 
                 }
                 viewModel.SoHdn = newHDN;
             }
@@ -123,20 +115,10 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
             ModelState.Remove("MaLoaiHangNavigation");
             ModelState.Remove("MaSanPham");
             ModelState.Remove("SoHdn");
-
-
-
-
-            // Lấy loại hàng từ CSDL
             string maLoaiHang = viewModel.MaLoaiHang;
 
-            // Ghi lại giá trị để kiểm tra
-
-            // Tìm loại hàng tương ứng trong cơ sở dữ liệu
             var loaiHang = _db.TLoaiHangs.FirstOrDefault(lh => lh.MaLoaiHang == maLoaiHang);
 
-
-            // Kiểm tra xem loại hàng có tồn tại hay không
             if (loaiHang == null)
             {
                 Debug.WriteLine($"Mã loại hàng không tồn tại");
@@ -163,10 +145,10 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                 }
                
                 // Tạo tên file mới (bạn có thể thay đổi logic đặt tên file nếu cần)
-                var fileExtension = Path.GetExtension(AnhSanPham.FileName); // Ví dụ: ".png", ".jpg", v.v.
+                var fileExtension = Path.GetExtension(AnhSanPham.FileName); 
 
                 // Tạo tên file mới bằng mã sản phẩm, giữ nguyên phần mở rộng
-                var fileName = $"{viewModel.MaSanPham}{fileExtension}";  // Tạo tên duy nhất
+                var fileName = $"{viewModel.MaSanPham}{fileExtension}";  
                 var filePath = Path.Combine(uploadFolder, fileName);
 
                 // Lưu ảnh vào thư mục đã chỉ định
@@ -199,13 +181,8 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                     MaSanPham = viewModel.MaSanPham,
                     Slnhap = viewModel.SoLuong
                 };
-                _db.TChiTietHdns.Add(chiTietHoaDonNhap);
-               
-                _db.THoaDonNhaps.Add(hoaDonNhap);
-             
-
-               
-
+                _db.TChiTietHdns.Add(chiTietHoaDonNhap);              
+                _db.THoaDonNhaps.Add(hoaDonNhap);                           
                 _db.TSanPhams.Add(sanPham);
                 _db.SaveChanges();
                 return RedirectToAction("DanhMucSanPham");
@@ -219,7 +196,7 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult SuaSanPham(string masp)
         {
-
+            TempData["ErrorMessage"] = "";
             ViewBag.LoaiHangList = new SelectList(_db.TLoaiHangs, "MaLoaiHang", "TenLoaiHang");
             var viewModel = _db.TSanPhams.Find(masp);
             ViewBag.Anh = viewModel.AnhSanPham;
@@ -241,6 +218,7 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult SuaSanPham(SanPhamNCCViewModel viewModel, IFormFile AnhSanPham)
         {
+            TempData["ErrorMessage"] = "";
             var sanPham1 = _db.TSanPhams
                    .AsNoTracking()
                    .FirstOrDefault(sp => sp.MaSanPham == viewModel.MaSanPham);
@@ -248,14 +226,12 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
             ViewBag.Anh = sanPham1.AnhSanPham;
             if (AnhSanPham != null && AnhSanPham.Length > 0)
             {
-                // Xóa ảnh cũ nếu cần
                 var oldImagePath = Path.Combine("wwwroot", "ProductImages", sanPham1.AnhSanPham);
                 if (System.IO.File.Exists(oldImagePath))
                 {
                     System.IO.File.Delete(oldImagePath);
                 }
 
-                // Lưu ảnh mới
                 var newFileName = viewModel.MaSanPham + Path.GetExtension(AnhSanPham.FileName);
                 var newPath = Path.Combine("wwwroot", "ProductImages", newFileName);
 
@@ -264,31 +240,24 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                     AnhSanPham.CopyTo(stream);
                 }
 
-                viewModel.AnhSanPham = newFileName; // Cập nhật tên file trong sanpham
+                viewModel.AnhSanPham = newFileName; 
             }
             else
             {
-                viewModel.AnhSanPham = sanPham1.AnhSanPham; // Giữ lại ảnh cũ
+                viewModel.AnhSanPham = sanPham1.AnhSanPham; 
             }
             ViewBag.LoaiHangList = new SelectList(_db.TLoaiHangs, "MaLoaiHang", "TenLoaiHang");
             ModelState.Remove("MaSanPham");
             ModelState.Remove("AnhSanPham");
             ModelState.Remove("MaLoaiHangNavigation");
             ModelState.Remove("SoHdn"); 
-                ModelState.Remove("MaNcc");
+            ModelState.Remove("MaNcc");
 
             string maLoaiHang = viewModel.MaLoaiHang;
             Debug.WriteLine($"MaLoaiHang: {viewModel.MaSanPham}");
-
-            // Ghi lại giá trị để kiểm tra
-
-            // Tìm loại hàng tương ứng trong cơ sở dữ liệu
             var loaiHang = _db.TLoaiHangs.FirstOrDefault(lh => lh.MaLoaiHang == maLoaiHang);
             viewModel.MaLoaiHangNavigation = loaiHang;
-           
-            // Kiểm tra xem loại hàng có tồn tại hay không
-
-
+          
             if (ModelState.IsValid)
             {
                 var sanPham = new TSanPham
@@ -315,7 +284,8 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult XoaSanPham(string masp)
         {
-            var checkSanPhamGioHang=_db.TSanPhamGioHangs.Where(x=>x.MaSanPham == masp).ToList();
+            TempData["ErrorMessage"] = "";
+           var checkSanPhamGioHang=_db.TSanPhamGioHangs.Where(x=>x.MaSanPham == masp).ToList();
             var chiTietHDB = _db.TChiTietHdbs.Where(x => x.MaSanPham == masp).ToList();
 
 
@@ -347,14 +317,14 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                 {
                     _db.Remove(_db.THoaDonNhaps.Find(soHDN));
                 }
+                TempData["ErrorMessage"] = "Sản phẩm đã được xóa";
                 _db.SaveChanges();
-
-                // Get the SoHDN value
             }
             else
             {
                 var sanpham = _db.TSanPhams.Find(masp);
                 _db.Remove(sanpham);
+                TempData["ErrorMessage"] = "Sản phẩm đã được xóa";
                 _db.SaveChanges();
                 var oldImagePath = Path.Combine("wwwroot", "ProductImages", sanpham.AnhSanPham);
                 if (System.IO.File.Exists(oldImagePath))
@@ -363,12 +333,6 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                 }
             }
           
-            // You can use soHDN for any further processing here
-
-
-
-
-
             return RedirectToAction("DanhMucSanPham");
 
         }

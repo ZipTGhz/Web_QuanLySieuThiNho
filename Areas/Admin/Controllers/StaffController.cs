@@ -50,28 +50,24 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
                 .Select(sp => sp.MaNv)
                 .FirstOrDefault();
 
-            string numberPart = maxMaNhanVien.Substring(2); // Lấy phần số sau "SP"
+            string numberPart = maxMaNhanVien.Substring(2); 
 
-            // Chuyển đổi thành số và tăng lên 1
             if (int.TryParse(numberPart, out int number))
             {
-                number++; // Tăng giá trị lên 1
-
-                // Tạo mã sản phẩm mới
+                number++; 
                 string newMaNV;
 
-                // Định dạng mã sản phẩm mới theo yêu cầu
                 if (number < 10)
                 {
-                    newMaNV = $"NV00{number}"; // 1 số => 2 số 0
+                    newMaNV = $"NV00{number}";
                 }
                 else if (number < 100)
                 {
-                    newMaNV = $"NV0{number}"; // 2 số => 1 số 0
+                    newMaNV = $"NV0{number}";
                 }
                 else
                 {
-                    newMaNV = $"NV{number}"; // 3 số => không cần số 0
+                    newMaNV = $"NV{number}"; 
                 }
                 viewModel.MaNv = newMaNV;
             }
@@ -81,11 +77,10 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Ghi log hoặc kiểm tra lỗi
                 var errors = ModelState.Values.SelectMany(v => v.Errors);
                 foreach (var error in errors)
                 {
-                    Console.WriteLine(error.ErrorMessage); // Hoặc sử dụng logger
+                    Console.WriteLine(error.ErrorMessage); 
                 }
                 return View(viewModel);
             }
@@ -137,17 +132,9 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         [Route("SuaNhanVien")]
         [HttpPost]
         public IActionResult SuaNhanVien(NhanVienViewModel viewModel)
-        {
-
-           
+        {          
             ModelState.Remove("MaNv");
-            ModelState.Remove("TrangThai");
-           
-
-
-            // Kiểm tra xem loại hàng có tồn tại hay không
-
-
+            ModelState.Remove("TrangThai");        
             if (ModelState.IsValid)
             {
                 var nhanVien = new TNhanVien

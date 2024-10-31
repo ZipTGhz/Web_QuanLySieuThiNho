@@ -39,14 +39,7 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult SuaKhachHang(TKhachHang customer)
         {
-
-
             ModelState.Remove("MaKh");
-
-
-            // Kiểm tra xem loại hàng có tồn tại hay không
-
-
             if (ModelState.IsValid)
             {
 
