@@ -64,6 +64,10 @@
                             <p>Báo cáo doanh thu</p>
                         </a>
                     </li>
+                    <li>
+                        <a href="javascript:void(0);" onclick="confirmLogout('@Url.Action("LogOut", "Account")')">Đăng xuất</a>
+                    </li>
+                    
                 </ul>
             </div>
         </div>
@@ -110,6 +114,9 @@
     <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="../../LayoutAdmin/assets/js/paper-dashboard.min.js?v=2.0.1" type="text/javascript"></script><!-- Paper Dashboard DEMO methods, don't include it in your project! -->
     <script src="../../LayoutAdmin/assets/demo/demo.js"></script>
+
+    <script src="~/js/site.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function () {
             // Javascript method's body can be found in LayoutAdmin/assets/LayoutAdmin/assets-for-demo/js/demo.js

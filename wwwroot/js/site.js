@@ -3,6 +3,7 @@
 
 // Write your JavaScript code.
 function confirmLogout(logoutUrl) {
+    console.log(logoutUrl); // Kiểm tra xem URL đăng xuất có đúng không
     Swal.fire({
         title: 'Thông báo',
         text: 'Bạn có muốn đăng xuất?',

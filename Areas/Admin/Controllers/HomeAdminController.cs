@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Web_QuanLySieuThiNho.Models;
+using Web_QuanLySieuThiNho.Models.Authentication;
 using Web_QuanLySieuThiNho.ViewModels;
 using X.PagedList;
 
 namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Route("Admin")]
+	[AuthorizeAdmin]
+	[Route("Admin")]
     [Route("Admin/Home")]
     public class HomeAdminController : Controller
     {

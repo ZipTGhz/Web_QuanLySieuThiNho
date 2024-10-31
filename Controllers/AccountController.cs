@@ -28,28 +28,50 @@ namespace Web_QuanLySieuThiNho.Controllers
 		{
 			if (HttpContext.Session.GetString("TenDangNhap") == null)
 			{
-				var u = _db.TTaiKhoans.Where(x=>x.TenDangNhap.Equals(tk.TenDangNhap) && x.MatKhau.Equals(tk.MatKhau)).FirstOrDefault();
+				var u = _db.TTaiKhoans
+							.Where(x => x.TenDangNhap.Equals(tk.TenDangNhap) && x.MatKhau.Equals(tk.MatKhau))
+							.FirstOrDefault();
 				if (u != null)
 				{
+					// Lưu thông tin vào session
 					HttpContext.Session.SetString("TenDangNhap", tk.TenDangNhap.ToString());
-					return RedirectToAction("Index","Home");
+					HttpContext.Session.SetString("LoaiTaiKhoan", u.LoaiTaiKhoan.ToString());
+
+					// Chuyển hướng tùy thuộc vào loại tài khoản
+					if (u.LoaiTaiKhoan == "Admin")
+					{
+						return RedirectToAction("DanhMucSanPham", "HomeAdmin", new { area = "Admin" });
+					}
+					else
+					{
+						// Chuyển hướng đến trang khác cho người dùng không phải Admin
+						return RedirectToAction("Index", "Home");
+					}
 				}
 				else
 				{
 					ViewBag.ErrorMessage = "Tên đăng nhập hoặc mật khẩu không đúng.";
-				} 
+				}
 			}
 			else
 			{
-				// Nếu người dùng đã đăng nhập, chuyển hướng tới trang chủ
-				return RedirectToAction("Index", "Home");
+				//Không xoá đoạn dưới.
+				//var loaiTaiKhoan = HttpContext.Session.GetString("LoaiTaiKhoan");
+				//if (loaiTaiKhoan == "Admin")
+				//{
+				//	return RedirectToAction("DanhMucSanPham", "HomeAdmin", new { area = "Admin" });
+				//}
+				//else
+				{
+					return RedirectToAction("Index", "Home");
+				}
 			}
-			// Trả về lại view đăng nhập
 			return View();
 		}
 
-        // GET: Account/SignIn
-        [HttpGet]
+
+		// GET: Account/SignUp
+		[HttpGet]
         public IActionResult SignUp()
         {
             return View();
