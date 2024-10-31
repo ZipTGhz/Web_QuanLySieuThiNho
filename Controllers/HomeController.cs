@@ -18,7 +18,7 @@ namespace Web_QuanLySieuThiNho.Controllers
         {
             _logger = logger;
         }
-        //[Authentication]
+        [Authentication]
         public IActionResult Index(int pageNumber = 1)
         {
             int pageSize = 9;
