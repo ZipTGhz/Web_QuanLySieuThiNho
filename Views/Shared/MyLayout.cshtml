@@ -8,27 +8,27 @@ For more information on enabling MVC for empty projects, visit https://go.micros
 <html lang="zxx">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="Ogani Template">
-    <meta name="keywords" content="Ogani, unica, creative, html">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>@ViewData["Title"]</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="Ogani Template">
+	<meta name="keywords" content="Ogani, unica, creative, html">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>@ViewData["Title"]</title>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+	<!-- Google Font -->
+	<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
 
-    <!-- Css Styles -->
-    <link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="../css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="../css/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="../css/nice-select.css" type="text/css">
-    <link rel="stylesheet" href="../css/jquery-ui.min.css" type="text/css">
-    <link rel="stylesheet" href="../css/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="../css/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="../css/style.css" type="text/css">
-    @* <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> *@
-
+	<!-- Css Styles -->
+	<link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css">
+	<link rel="stylesheet" href="../css/font-awesome.min.css" type="text/css">
+	<link rel="stylesheet" href="../css/elegant-icons.css" type="text/css">
+	<link rel="stylesheet" href="../css/nice-select.css" type="text/css">
+	<link rel="stylesheet" href="../css/jquery-ui.min.css" type="text/css">
+	<link rel="stylesheet" href="../css/owl.carousel.min.css" type="text/css">
+	<link rel="stylesheet" href="../css/slicknav.min.css" type="text/css">
+	<link rel="stylesheet" href="../css/style.css" type="text/css">
+	@* <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> *@
+	
 </head>
 
 <body>
@@ -164,7 +164,7 @@ For more information on enabling MVC for empty projects, visit https://go.micros
                             </div>
                         </div>
                     </div>
-                    <div id="suggestions" style="display: none"></div>
+                    <div id="suggestions"></div>
                 </div>
             </div>
         </div>
@@ -280,34 +280,21 @@ For more information on enabling MVC for empty projects, visit https://go.micros
                         data.forEach(item => {
                             let imageUrl = '@Url.Content("../ProductImages/")' + item.anhSanPham;
                             suggestions.innerHTML += `
-                                                            <div class="suggestion-item">
-                                                                <a href="/Home/Detail?productId=${item.maSanPham}">
-                                                                            <img src= "${imageUrl}" alt="${item.tenSanPham}" class="suggestion-img" />
-                                                                    <div class="suggestion-info">
-                                                                        <span class="suggestion-name">${item.tenSanPham}</span>
-                                                                        <span class="suggestion-price">${item.donGiaBan} VND</span>
-                                                                    </div>
-                                                                </a>
-                                                            </div>`;
+                                            <div class="suggestion-item">
+                                                <a href="/Home/Detail?productId=${item.maSanPham}">
+                                                            <img src= "${imageUrl}" alt="${item.tenSanPham}" class="suggestion-img" />
+                                                    <div class="suggestion-info">
+                                                        <span class="suggestion-name">${item.tenSanPham}</span>
+                                                        <span class="suggestion-price">${item.donGiaBan} VND</span>
+                                                    </div>
+                                                </a>
+                                            </div>`;
                         });
                     });
             } else {
                 document.getElementById('suggestions').innerHTML = '';
             }
         }
-
-        const searchBox = document.getElementById("searchBox")
-        const div = document.getElementById("suggestions");
-
-        // Hiển thị khi focus
-        searchBox.addEventListener("focus", () => {
-            div.style.display = "block";
-        });
-
-        // Ẩn khi mất focus
-        searchBox.addEventListener("blur", () => {
-            div.style.display = "none";
-        });
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
