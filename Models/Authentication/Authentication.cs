@@ -8,9 +8,9 @@ namespace Web_QuanLySieuThiNho.Models.Authentication
 	{
 		public override void OnActionExecuting(ActionExecutingContext context)
 		{
-			if (context.HttpContext.Session.GetString("username") == null)
-            {
-				Debug.WriteLine("A");
+			var session = context.HttpContext.Session;
+			if (session.GetString("TenDangNhap") == null)
+			{
 				context.Result = new RedirectToRouteResult(
 					new RouteValueDictionary
 					{

@@ -131,7 +131,7 @@ input[type="Password"] {
     box-sizing: border-box;
     border: none;
     outline: none;
-    background-color: white;
+    background: white;
     
     letter-spacing: .5px;
 }
