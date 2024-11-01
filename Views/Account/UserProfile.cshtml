@@ -15,6 +15,7 @@
 		<div class="col-md-4">
 			<form asp-action="Save" asp-controller="Account" method="post">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<input type="hidden" asp-for="MaKh"/>
 				<div class="form-group">
 					<label asp-for="TenDangNhap" class="control-label">Tên đăng nhập</label>
 					<input asp-for="TenDangNhap" class="form-control" readonly />
