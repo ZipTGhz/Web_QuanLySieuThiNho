@@ -41,15 +41,17 @@
                         <tbody>
                             @if (Model != null && Model.TSanPhamGioHangs != null && Model.TSanPhamGioHangs.Any())
                             {
+                                var idx = 0;
                                 @foreach (var item in Model.TSanPhamGioHangs)
                                 {
+                                    var totalItemIdx = "TotalAmountItem" + idx++;
                                     <tr id="cart-item-@item.MaSanPham">
                                         <td class="shoping__cart__item">
                                             <img style="height: 100px; width: auto;" src=@Url.Content("../ProductImages/" + @item.MaSanPhamNavigation.AnhSanPham) alt="">
                                             <h5>@item.MaSanPhamNavigation.TenSanPham</h5>
                                         </td>
                                         <td class="shoping__cart__price">
-                                            @item.DonGiaBan.Value.ToString("#,##0") VND
+                                            @item.MaSanPhamNavigation.DonGiaBan.Value.ToString("#,##0") VND
                                         </td>
                                         <td class="shoping__cart__quantity">
                                             <div class="quantity">
@@ -59,7 +61,7 @@
                                             </div>
                                         </td>
                                         <td id="totalAmount_@item.MaSanPham" class="shoping__cart__total">
-                                            @item.TongTienSanPham.Value.ToString("#,##0") VND
+                                            @ViewData[totalItemIdx] VND
                                         </td>
                                         <td class="shoping__cart__item__close">
                                             <span class="icon_close" onclick="removeCartItem('@item.MaSanPham')"></span>
@@ -84,7 +86,7 @@
                 <div class="shoping__checkout">
                     <h5>Tổng giá trị giỏ hàng</h5>
                     <ul>
-                        <li>Tổng <span class="totalAmountCart">@Model.TongTienGioHang.Value.ToString("#,##0") VND</span></li>
+                        <li>Tổng <span class="totalAmountCart">@Context.Session.GetString("TotalAmountCart") VND</span></li>
                     </ul>
                     <a href="javascript:void(0);" class="primary-btn" onclick="checkCartBeforeCheckout()">TIẾN HÀNH THANH TOÁN</a>
                 </div>

@@ -13,8 +13,6 @@ public partial class TGioHang
 
     public string? TrangThai { get; set; }
 
-    public decimal? TongTienGioHang { get; set; }
-
     public virtual TKhachHang? MaKhNavigation { get; set; }
 
     public virtual ICollection<TSanPhamGioHang> TSanPhamGioHangs { get; set; } = new List<TSanPhamGioHang>();

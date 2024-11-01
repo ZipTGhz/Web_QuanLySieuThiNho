@@ -15,8 +15,14 @@ namespace Web_QuanLySieuThiNho.Controllers
         [Authentication]
         public IActionResult Index()
         {
-            var cart = GetCartIncludedExtended();
+            var cart = GetCartIncluded();
             HttpContext.Session.SetInt32("CartCount", cart.TSanPhamGioHangs.Sum(item => item.SoLuong) ?? 0);
+            var idx = 0;
+            foreach (var item in cart.TSanPhamGioHangs)
+            {
+                var totalAmountItem = "TotalAmountItem" + idx++;
+                ViewData[totalAmountItem] = (item.MaSanPhamNavigation?.DonGiaBan * item.SoLuong ?? 0).ToString("#,##0");
+            }
             return View(cart);
         }
         private TGioHang GetCart()
@@ -31,7 +37,6 @@ namespace Web_QuanLySieuThiNho.Controllers
                     MaKh = customerID,
                     NgayTao = DateTime.Now,
                     TrangThai = "ChuaThanhToan",
-                    TongTienGioHang = 0,
                 };
                 _db.TGioHangs.Add(cart);
                 _db.SaveChanges();
@@ -50,30 +55,6 @@ namespace Web_QuanLySieuThiNho.Controllers
                     MaKh = customerID,
                     NgayTao = DateTime.Now,
                     TrangThai = "ChuaThanhToan",
-                    TongTienGioHang = 0,
-                };
-                _db.TGioHangs.Add(cart);
-                _db.SaveChanges();
-                return cart;
-            }
-            var cartIncluded = _db.TGioHangs
-                .Include(x => x.TSanPhamGioHangs)
-                .FirstOrDefault(x => x.MaKh == customerID && x.TrangThai == "ChuaThanhToan");
-            return cartIncluded;
-        }
-        private TGioHang GetCartIncludedExtended()
-        {
-            string username = HttpContext.Session.GetString("TenDangNhap");
-            string customerID = Helpers.GetCustomerID(username);
-            var cart = _db.TGioHangs.FirstOrDefault(x => x.MaKh == customerID && x.TrangThai == "ChuaThanhToan");
-            if (cart == null)
-            {
-                cart = new TGioHang()
-                {
-                    MaKh = customerID,
-                    NgayTao = DateTime.Now,
-                    TrangThai = "ChuaThanhToan",
-                    TongTienGioHang = 0,
                 };
                 _db.TGioHangs.Add(cart);
                 _db.SaveChanges();
@@ -93,13 +74,15 @@ namespace Web_QuanLySieuThiNho.Controllers
             if (username == null || cartLoaded != null)
                 return Json(new { isCartLoaded = true });
             var cart = GetCartIncluded();
+            var totalAmountCart = cart.TSanPhamGioHangs.Sum(x => x.MaSanPhamNavigation?.DonGiaBan * x.SoLuong);
+
             HttpContext.Session.SetInt32("CartCount", cart.TSanPhamGioHangs.Sum(item => item.SoLuong) ?? 0);
-            HttpContext.Session.SetString("TotalAmountCart", (cart.TongTienGioHang ?? 0).ToString("#,##0"));
+            HttpContext.Session.SetString("TotalAmountCart", (totalAmountCart ?? 0).ToString("#,##0"));
             return Json(new
             {
                 isCartLoaded = false,
                 cartCount = cart.TSanPhamGioHangs.Sum(x => x.SoLuong),
-                totalAmountCart = cart.TongTienGioHang.Value.ToString("#,##0"),
+                totalAmountCart = (totalAmountCart ?? 0).ToString("#,##0"),
             });
         }
         [HttpPost]
@@ -116,8 +99,6 @@ namespace Web_QuanLySieuThiNho.Controllers
                     MaGioHang = cart.MaGioHang,
                     MaSanPham = productId,
                     SoLuong = quantity,
-                    DonGiaBan = product?.DonGiaBan ?? 0,
-                    TongTienSanPham = (product?.DonGiaBan ?? 0) * quantity,
                 };
                 _db.TSanPhamGioHangs.Add(cartItem);
             }
@@ -131,18 +112,17 @@ namespace Web_QuanLySieuThiNho.Controllers
                     });
                 };
                 cartItem.SoLuong += quantity;
-                cartItem.TongTienSanPham = cartItem.DonGiaBan * cartItem.SoLuong;
             }
             _db.SaveChanges();
-            cart.TongTienGioHang = cart.TSanPhamGioHangs.Sum(x => x.TongTienSanPham);
+            var totalAmountCart = cart.TSanPhamGioHangs.Sum(x => x.MaSanPhamNavigation?.DonGiaBan * x.SoLuong);
             _db.SaveChanges();
             HttpContext.Session.SetInt32("CartCount", cart.TSanPhamGioHangs.Sum(item => item.SoLuong) ?? 0);
-            HttpContext.Session.SetString("TotalAmountCart", (cart.TongTienGioHang ?? 0).ToString("#,##0"));
+            HttpContext.Session.SetString("TotalAmountCart", (totalAmountCart ?? 0).ToString("#,##0"));
             return Json(new
             {
                 success = true,
                 cartCount = cart.TSanPhamGioHangs.Sum(x => x.SoLuong),
-                totalAmountCart = cart.TongTienGioHang.Value.ToString("#,##0"),
+                totalAmountCart = (totalAmountCart ?? 0).ToString("#,##0"),
             });
         }
         [HttpPost]
@@ -150,22 +130,21 @@ namespace Web_QuanLySieuThiNho.Controllers
         public IActionResult UpdateCartItemQuantity(string productId, int quantity)
         {
             var cart = GetCartIncluded();
-            var cartItem = _db.TSanPhamGioHangs.FirstOrDefault(x => x.MaGioHang == cart.MaGioHang && x.MaSanPham == productId);
+            var cartItem = _db.TSanPhamGioHangs
+                .Include(x => x.MaSanPhamNavigation)
+                .FirstOrDefault(x => x.MaGioHang == cart.MaGioHang && x.MaSanPham == productId);
             if (cartItem != null)
-            {
                 cartItem.SoLuong = quantity;
-                cartItem.TongTienSanPham = cartItem.DonGiaBan * quantity;
-            }
             _db.SaveChanges();
-            cart.TongTienGioHang = _db.TSanPhamGioHangs.Where(x => x.MaGioHang == cart.MaGioHang).Sum(x => x.TongTienSanPham);
-            _db.SaveChanges();
+            var totalAmountCartItem = quantity * cartItem?.MaSanPhamNavigation?.DonGiaBan;
+            var totalAmountCart = cart.TSanPhamGioHangs.Sum(x => x.MaSanPhamNavigation?.DonGiaBan * x.SoLuong);
             HttpContext.Session.SetInt32("CartCount", cart.TSanPhamGioHangs.Sum(item => item.SoLuong) ?? 0);
-            HttpContext.Session.SetString("TotalAmountCart", (cart.TongTienGioHang ?? 0).ToString("#,##0"));
+            HttpContext.Session.SetString("TotalAmountCart", (totalAmountCart ?? 0).ToString("#,##0"));
             return Json(new
             {
                 cartCount = cart.TSanPhamGioHangs.Sum(x => x.SoLuong),
-                totalAmountCartItem = cartItem.TongTienSanPham.Value.ToString("#,##0"),
-                totalAmountCart = cart.TongTienGioHang.Value.ToString("#,##0")
+                totalAmountCartItem = (totalAmountCartItem ?? 0).ToString("#,##0"),
+                totalAmountCart = (totalAmountCart ?? 0).ToString("#,##0")
             });
         }
         [HttpPost]
@@ -178,15 +157,14 @@ namespace Web_QuanLySieuThiNho.Controllers
             {
                 _db.TSanPhamGioHangs.Remove(cartItem);
                 _db.SaveChanges();
-                cart.TongTienGioHang = _db.TSanPhamGioHangs.Where(x => x.MaGioHang == cart.MaGioHang).Sum(x => x.TongTienSanPham);
-                _db.SaveChanges();
             }
-            HttpContext.Session.SetString("TotalAmountCart", (cart.TongTienGioHang ?? 0).ToString("#,##0"));
+            var totalAmountCart = cart.TSanPhamGioHangs.Sum(x => x.MaSanPhamNavigation?.DonGiaBan * x.SoLuong);
+            HttpContext.Session.SetString("TotalAmountCart", (totalAmountCart ?? 0).ToString("#,##0"));
             HttpContext.Session.SetInt32("CartCount", cart.TSanPhamGioHangs.Sum(item => item.SoLuong) ?? 0);
             return Json(new
             {
                 cartCount = cart.TSanPhamGioHangs.Sum(x => x.SoLuong),
-                totalAmountCart = cart.TongTienGioHang.Value.ToString("#,##0"),
+                totalAmountCart = (totalAmountCart ?? 0).ToString("#,##0"),
             });
         }
         [Authentication]
@@ -206,7 +184,7 @@ namespace Web_QuanLySieuThiNho.Controllers
         private CheckoutPageViewModel GetCartInfo()
         {
             List<CheckoutCartItemViewModel> checkoutCartItems = new List<CheckoutCartItemViewModel>();
-            var cart = GetCartIncludedExtended();
+            var cart = GetCartIncluded();
             var cartItems = cart.TSanPhamGioHangs;
             foreach (var item in cartItems)
             {
@@ -215,7 +193,7 @@ namespace Web_QuanLySieuThiNho.Controllers
                     MaSanPham = item.MaSanPham ?? "",
                     TenSanPham = item.MaSanPhamNavigation?.TenSanPham ?? "",
                     SoLuong = item.SoLuong ?? 0,
-                    TongTien = item.TongTienSanPham ?? 0,
+                    TongTien = item.MaSanPhamNavigation?.DonGiaBan * item.SoLuong ?? 0,
                 };
                 checkoutCartItems.Add(checkoutCartItem);
             }
