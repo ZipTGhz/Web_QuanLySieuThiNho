@@ -19,7 +19,7 @@ namespace Web_QuanLySieuThiNho.Controllers
             _logger = logger;
         }
         [Authentication]
-        public IActionResult Index(int pageNumber = 1)
+		public IActionResult Index(int pageNumber = 1)
         {
             int pageSize = 9;
             var products = _db.TSanPhams.AsNoTracking().Where(x=> x.SoLuong > 0).OrderBy(x => x.TenSanPham);
