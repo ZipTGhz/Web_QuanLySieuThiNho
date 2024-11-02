@@ -157,7 +157,7 @@ For more information on enabling MVC for empty projects, visit https://go.micros
 							</div>
 						</div>
 					</div>
-					<div id="suggestions" style="display: none"></div>
+					<div id="suggestions"></div>
 				</div>
 			</div>
 		</div>
@@ -298,28 +298,12 @@ For more information on enabling MVC for empty projects, visit https://go.micros
 				document.getElementById('suggestions').innerHTML = '';
 			}
 		}
-
-		const searchBox = document.getElementById("searchBox")
-		const div = document.getElementById("suggestions");
-
-		// Hiển thị khi focus
-		searchBox.addEventListener("focus", () => {
-			div.style.display = "block";
-		});
-
-		// Ẩn khi mất focus
-		searchBox.addEventListener("blur", () => {
-			div.style.display = "none";
-		});
 	</script>
 
 	@await RenderSectionAsync("Scripts", required: false)
 
 	<style>
 		#suggestions {
-			border-bottom: 1px solid #ccc;
-			border-left: 1px solid #ccc;
-			border-right: 1px solid #ccc;
 			max-height: 300px;
 			overflow-y: auto;
 			background-color: white;
