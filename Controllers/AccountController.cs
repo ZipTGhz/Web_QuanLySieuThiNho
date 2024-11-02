@@ -190,9 +190,9 @@ namespace Web_QuanLySieuThiNho.Controllers
 
 					_db.SaveChanges(); // Lưu thay đổi vào cơ sở dữ liệu
 
-					// Chuyển hướng về trang UserProfile sau khi lưu thành công
-					return RedirectToAction("UserProfile");
-				}
+                    // Chuyển hướng về trang UserProfile sau khi lưu thành công
+                    return RedirectToAction("Index", "Home");
+                }
 				else
 				{
 					ModelState.AddModelError("", "Không tìm thấy khách hàng hoặc tài khoản.");

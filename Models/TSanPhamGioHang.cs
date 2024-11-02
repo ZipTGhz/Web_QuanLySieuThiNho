@@ -13,6 +13,10 @@ public partial class TSanPhamGioHang
 
     public int? SoLuong { get; set; }
 
+    public decimal? DonGiaBan { get; set; }
+
+    public decimal? TongTienSanPham { get; set; }
+
     public virtual TGioHang? MaGioHangNavigation { get; set; }
 
     public virtual TSanPham? MaSanPhamNavigation { get; set; }
