@@ -43,7 +43,7 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
         }
         [Route("ThemSanPhamMoi")]
         [HttpPost]
-        public IActionResult ThemSanPhamMoi(SanPhamNCCViewModel viewModel, IFormFile AnhSanPham)
+        public async Task<IActionResult> ThemSanPhamMoi(SanPhamNCCViewModel viewModel, IFormFile AnhSanPham)
         {
             
             string sqlQuery = @"
@@ -136,27 +136,41 @@ namespace Web_QuanLySieuThiNho.Areas.Admin.Controllers
             
             if (ModelState.IsValid)
             {
+
                 var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ProductImages");
 
-                // Tạo thư mục nếu chưa tồn tại
-                if (!Directory.Exists(uploadFolder))
+                if (AnhSanPham != null && AnhSanPham.Length > 0)
                 {
-                    Directory.CreateDirectory(uploadFolder);
-                }
-               
-                // Tạo tên file mới (bạn có thể thay đổi logic đặt tên file nếu cần)
-                var fileExtension = Path.GetExtension(AnhSanPham.FileName); 
+                    try
+                    {
+                        var fileExtension = Path.GetExtension(AnhSanPham.FileName);
+                        var fileName = $"{viewModel.MaSanPham}_{DateTime.Now.Ticks}{fileExtension}";
+                        var filePath = Path.Combine(uploadFolder, fileName);
 
-                // Tạo tên file mới bằng mã sản phẩm, giữ nguyên phần mở rộng
-                var fileName = $"{viewModel.MaSanPham}{fileExtension}";  
-                var filePath = Path.Combine(uploadFolder, fileName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await AnhSanPham.CopyToAsync(stream); // Ensure this completes
+                        }
 
-                // Lưu ảnh vào thư mục đã chỉ định
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                     AnhSanPham.CopyToAsync(stream); 
+                        // Double-check that the file was created and is not empty
+                        var fileInfo = new FileInfo(filePath);
+                        if (fileInfo.Exists && fileInfo.Length > 0)
+                        {
+                            viewModel.AnhSanPham = fileName; // Save file name in the model
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "The image file could not be saved.");
+                            Debug.WriteLine("File is empty after upload.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"An error occurred while saving the image: {ex.Message}");
+                        ModelState.AddModelError("", "Unable to save the image file. Please try again.");
+                    }
                 }
-                viewModel.AnhSanPham = fileName;
+
                 var sanPham = new TSanPham
                 {
                     MaSanPham = viewModel.MaSanPham,
