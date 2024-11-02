@@ -33,23 +33,13 @@
                         <img class="product__details__pic__item--large"
                              src=@Url.Content("../ProductImages/" + Model.Product.AnhSanPham) alt="">
                     </div>
-                    <div class="product__details__pic__slider owl-carousel">
-                        <img data-imgbigurl="../img/product/details/product-details-2.jpg"
-                             src="../img/product/details/thumb-1.jpg" alt="">
-                        <img data-imgbigurl="../img/product/details/product-details-3.jpg"
-                             src="../img/product/details/thumb-2.jpg" alt="">
-                        <img data-imgbigurl="../img/product/details/product-details-5.jpg"
-                             src="../img/product/details/thumb-3.jpg" alt="">
-                        <img data-imgbigurl="../img/product/details/product-details-4.jpg"
-                             src="../img/product/details/thumb-4.jpg" alt="">
-                    </div>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__text">
                     <h3>@Model.Product.TenSanPham</h3>
                     <div class="product__details__price">@(Model.Product.DonGiaBan.HasValue ? Model.Product.DonGiaBan.Value.ToString("#,##0") + " VND" : "N/A")</div>
-                    <p>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </p>
+                    <p style="height: 100px"> </p>
                     <div class="product__details__quantity">
                         <div class="quantity">
                             <div class="qty">
