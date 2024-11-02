@@ -15,7 +15,6 @@ namespace Web_QuanLySieuThiNho.ViewModels
         public decimal? DonGiaNhap { get; set; }
         [Required(ErrorMessage = "Đơn giá bán là bắt buộc.")]
         [Range(0, double.MaxValue, ErrorMessage = "Đơn giá bán phải là một số dương.")]
-
         public decimal? DonGiaBan { get; set; }
         [Required(ErrorMessage = "Số lượng là bắt buộc.")]
         [Range(0, int.MaxValue, ErrorMessage = "Số lượng phải là một số nguyên không âm.")]
